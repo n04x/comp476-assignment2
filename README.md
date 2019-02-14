@@ -9,4 +9,4 @@ ID: 27554524
 
 ## Map Layout    
 Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear!    
-[!Map Layout](/map-layout.png)
+![Map Layout](/map-layout.png)
