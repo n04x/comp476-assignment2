@@ -14,3 +14,7 @@ Below is a picture of the map layout of the game, with number assigned to each *
     
 ## Obstacles    
 The obstacles is clearly defined by the color RED in the map layout. There is two type of obstacle, a 4-sided one and a triangular prism one. In all three (3) rooms there is some obstacles.
+
+
+## Sources 
+The source for 3d penguin: https://free3d.com/3d-model/penguin-16817.html 
