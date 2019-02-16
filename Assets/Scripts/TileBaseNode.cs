@@ -7,7 +7,7 @@ public class TileBaseNode : MonoBehaviour
     // create enumerator for neighbours (up to 8)
     public enum Neighbours
     {
-        up_left = 0, up = 1, up_right = 2, right = 3, down_right = 4, down = 5, down_left = 6, left = 7
+        up = 0, up_right = 1, right = 2, down_right = 3, down = 4, down_left = 5, left = 6, up_left = 7
     };
     public TileBaseNode[] neighbours = new TileBaseNode[8];
 
@@ -20,8 +20,13 @@ public class TileBaseNode : MonoBehaviour
 
         GetComponent<Renderer>().enabled = false;    
     }
-    void NodeVisible() {
+    public void NodeVisible() {
         GetComponent<Renderer>().enabled = true;
+    }
+
+    public void NoidInvisible()
+    {
+        GetComponent<Renderer>().enabled = false;
     }
 
     public int Compare(TileBaseNode node_a, TileBaseNode node_b) {
@@ -32,5 +37,10 @@ public class TileBaseNode : MonoBehaviour
 
         return result;
     }
-
+    public void ResetPathfindingValue()
+    {
+        cost_so_far = 0;
+        heuristic_value = 0;
+        total_estimated_value = 0;
+    }
 }
