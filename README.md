@@ -5,7 +5,7 @@ Presented by: Thomas Backs
 ID: 27554524    
 ***
 ## Introduction    
-`//todo`
+We use the Node instead of GameObject for our [Pathfinding.cs](###Pathfinding.cs) file, because we will need to access to many function and variable inside the [Node.cs](###Node.cs) script and creating a holder for both GameObject AND Script for all our needs is useless since we mostly just going to need the script of each node to do our work.    
 
 ## Map Layout    
 Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear! The red outline design the room, each room has a small room called *closet*. There is two corridor in the middle, one that lead to a dead-end. There is few obstacles in each room, to force the player to move around it, instead of straight line in the room.    
