@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - tile_based_node
+  - rgtg_node
+  - pov_node
   layers:
   - Default
   - TransparentFX

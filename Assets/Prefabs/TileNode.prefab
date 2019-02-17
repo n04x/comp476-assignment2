@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1455535201650084993}
   m_Layer: 0
   m_Name: TileNode
-  m_TagString: tile_based_node
+  m_TagString: rgtg_node
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,15 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a5a7a8fe5c7d24bb9b136a04e5eab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  neighbours: []
-  PoV: 0
-  rtgt_neighbours:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rtgt_previous: {fileID: 0}
+  rgtg: 1
+  rgtg_neighbours: []
+  rgtg_previous: {fileID: 0}
+  pov_neighbours: []
+  pov_previous: {fileID: 0}

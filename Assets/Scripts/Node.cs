@@ -9,23 +9,29 @@ public class Node : MonoBehaviour
     float cost_so_far;
     float heuristic_value;
     float total_estimated_value;
-
+    public bool rgtg = true;
     // ==============================================================================
     // REGULAR GRID (TILE) GRAPH
     // using abbreviation rgtg -> regular grid tile graph
     // ==============================================================================
-    public enum Neighbours { upper = 0, upper_right = 1, right = 2, lower_right = 3, lower = 4, lower_left = 5, left = 6, upper_left = 7 };
-    public Node[] rgtg_neighbours = new Node[8]; // create an array to hold all neighbours.
+    public Node[] rgtg_neighbours; // create an array to hold all neighbours. see README for mapping value. 
     public Node rgtg_previous;
     // ==============================================================================
     // POINT OF VISIBILITY GRAPH
     // using abbreviation pov -> points of visibility
     // ==============================================================================
-    public List<Node> pov_neighbours = new List<Node>();
+    public List<Node> pov_neighbours;
     public Node pov_previous;
 
     void Start()
     {
+        if(rgtg)
+        {
+            rgtg_neighbours = new Node[8];
+        } else
+        {
+            pov_neighbours = new List<Node>();
+        }
         GetComponent<Renderer>().enabled = false;   // start by disabling it.
     }
     public void TurnNodeVisible()
