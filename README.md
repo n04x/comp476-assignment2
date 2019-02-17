@@ -16,20 +16,24 @@ Below is a picture of the map layout of the game, with number assigned to each *
 The obstacles is clearly defined by the color RED in the map layout. There is two type of obstacle, a 4-sided one and a triangular prism one. In all three (3) rooms there is some obstacles.
 
 ## Scripts file explanation    
-### TileBaseNode.cs
-This file contains the script for Nodes creation and linking all the nodes in our map. We have a enumerator called `Neighbours` that is responsible of identifying and linking all neighbouring nodes (up to 8). We also have three (3) float variable called `cost_so_far`, `heuristic_value`, and `total_estimated_cost`, these are variable needed in our calculation of A* pathfinding based on Slide #37 of Week 03. There is also enumerator that will be used for determining neighbours, `public enum Neighbours { upper = 0, upper_right = 1, right = 2, lower_right = 3, lower = 4, lower_left = 5, left = 6, upper_left = 7 };`    
-
+### Node.cs
+This script contains variable and functions that will be used by both TileNode and PoVNode prefabs. The reason for a single file for both is to simplify refactoring and for simplicity sake. It contains 3 variables used by both regular grid and point of visibility, the variables are of type float named: `cost_so_far, heuristic_value, total_estimated_value`. There is also variable respective to each mode as explained below. *NOTE: the variables are starting by either rgtg (regular grid tile graph) or pov (point of visibility)*.    
+These variables are used for regular grid tile graph method, notice that they all start with rgtg to facilitate their identification and their reason for existing.    
+`public Node[] rgtg_neighbours = new Node[8];` this array will hold all current node neighbours up to maximum of 8. each value correspond to a position of the map, the mapping is upper = 0 upper right = 1, right = 2, lower right = 3, lower = 4, lower left = 5, left = 6, and upper left = 7. This array will be use in our Pathfinding script in [Pathfinding](###Pathfinding.cs) in the CreateNeighbours(Node node) function.
 * void Start()
-    * `GetComponent<Renderer>().enabled = false;` To hide the rendering of the node from our map.
-* void NodeVisible()
-    * `GetComponent<Renderer>().enabled = true;` To enable the visibility of the node on the map.
+    * `GetComponent<Renderer>().enabled = false;` To hide the rendering of the nodes from our map.
+* public void TurnNodeVisible()
+    * `GetComponent<Renderer>().enabled = true;` To enable the visibility of the nodes on the map.
+* public void TurnNodeInvisible()
+    * * `GetComponent<Renderer>().enabled = false;` To enable the visibility of the nodes on the map.
+* public void ResetValue()
+    * function to reset cost-so-far, heuristic, and total estimate value to zero.
+* Getter and setter for our three (3) float (`cost_so_far, heuristic_value, total_estimated_value`) in our file.
 * public int Compare(Node node_a, Node node_b)
     * `int result = node_a.total_estimated_value.CompareTo(node_b.heuristic_value);` To compare the estimated cost from one node to another, again based on slides information of A* algorithm. CompareTo() method is a C# method.
     * return either the `result` or `node_a.heuristic_value.CompareTo(node_b.heuristic_value)` as integer value.    
-* public void ResetPathfindingValue()
-    * function to reset cost-so-far, heuristic, and total estimate value to zero.
 
-### TileGraph.cs
+### Pathfinding.cs
 This file contains the scripts to create connection and to calculate the pathfinding algorithm for the *regular grid (Tile) graph*. It will stores all available nodes in a `List`, the list variable are shown like this:`public List<TileBaseNode> [name] = new List<TileBaseNode>();`. Where the *name* is the variable name of the list. We also have a single end node which is named `public TileBaseNode target_tile_node` which will contains the target node of this algorithm. There is also a public boolean value to enable the mode: `public bool tile_base_mode = true` it is set to true since it is the default one that will be used for our AI. there is two integers for rooms as well, it will allows us to select which room will be the target. 
 
 * void CreateTile()
