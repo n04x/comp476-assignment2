@@ -8,7 +8,7 @@ ID: 27554524
 `//todo`
 
 ## Map Layout    
-Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear!    
+Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear! The red outline design the room, each room has a small room called *closet*. There is two corridor in the middle, one that lead to a dead-end.    
 ![Map Layout](/map-layout.png)
     
     
