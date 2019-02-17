@@ -1,27 +1,85 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
+using UnityEngine;
+using System.Collections.Generic;
 
-public class Node {
-    public bool no_obstacle;
-    public Vector3 position;
-    public int grid_x;
-    public int grid_y;
+public class Node : MonoBehaviour
+{
+    // Pathfinding list in A* (see README.md for information)
+    float cost_so_far;
+    float heuristic_value;
+    float total_estimated_value;
 
-    public int cost_so_far;
-    public int heuristic_cost;
-    public Node parent;
+    // ==============================================================================
+    // REGULAR GRID (TILE) GRAPH
+    // using abbreviation rgtg -> regular grid tile graph
+    // ==============================================================================
+    public enum Neighbours { upper = 0, upper_right = 1, right = 2, lower_right = 3, lower = 4, lower_left = 5, left = 6, upper_left = 7 };
+    public Node[] rgtg_neighbours = new Node[8]; // create an array to hold all neighbours.
+    public Node rgtg_previous;
+    // ==============================================================================
+    // POINT OF VISIBILITY GRAPH
+    // using abbreviation pov -> points of visibility
+    // ==============================================================================
+    public List<Node> pov_neighbours = new List<Node>();
+    public Node pov_previous;
 
-    public Node(bool _no_obstacle, Vector3 _position, int _grid_x, int _grid_y)
+    void Start()
     {
-        no_obstacle = _no_obstacle;
-        position = _position;
-        grid_x = _grid_x;
-        grid_y = _grid_y;
+        GetComponent<Renderer>().enabled = false;   // start by disabling it.
+    }
+    public void TurnNodeVisible()
+    {
+        GetComponent<Renderer>().enabled = true;
+    }
+    public void TurnNodeInvisible()
+    {
+        GetComponent<Renderer>().enabled = false;
+    }
+    
+    public void ResetValue()
+    {
+        cost_so_far = 0;
+        heuristic_value = 0;
+        total_estimated_value = 0;
+    }
+    // Getter and Setter for cost-so-far.
+    public float CostSoFar()
+    {
+        return cost_so_far;
+    }
+    public void SetCostSoFar(float value)
+    {
+        cost_so_far = value;
     }
 
-    public int estimateTotalCost()
+    // Getter and Setter for heuristic value.
+    public float HeuristicValue()
     {
-        return cost_so_far + heuristic_cost;
+        return heuristic_value;
+    }
+    public void SetHeuristicValue(float value)
+    {
+        heuristic_value = value;
+    }
+
+    // Getterand setter for total estimate value.
+    public float TotalEstimateValue()
+    {
+        return total_estimated_value;
+    }
+    public void SetTotalEstimatedValue(float value)
+    {
+        total_estimated_value = value;
+    }
+    // Compare needed for regular grid tile graph to check
+    public int Compare(Node node_a, Node node_b)
+    {
+        int result = node_a.total_estimated_value.CompareTo(node_b.heuristic_value);
+        if(result == 0)
+        {
+            return node_a.heuristic_value.CompareTo(node_b.heuristic_value);
+        }
+        return result;
     }
 }
-    
