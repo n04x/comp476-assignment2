@@ -45,4 +45,30 @@ public class TileBaseNode : MonoBehaviour
         heuristic_value = 0;
         total_estimated_value = 0;
     }
+    public float CostSoFar()
+    {
+        return cost_so_far;
+    }
+    public void SetCostSoFar(float _cost_so_far)
+    {
+        cost_so_far = _cost_so_far;
+    }
+
+    public float HeuristicValue()
+    {
+        return heuristic_value;
+    }
+    public void SetHeuristic(float _heuristic_value)
+    {
+        heuristic_value = _heuristic_value;
+    }
+    
+    public float TotalEstimateValue()
+    {
+        return total_estimated_value;
+    }
+    public void SetTotalEstimatedValue(float _total_estimated_value)
+    {
+        total_estimated_value = _total_estimated_value;
+    }
 }

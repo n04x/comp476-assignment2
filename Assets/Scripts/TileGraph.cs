@@ -34,16 +34,16 @@ public class TileGraph : MonoBehaviour
 
     public TileBaseNode random_tile_node;
 
-    int room;
-    int another_room;
+    int closet;
+    int target_closet;
 
     public enum Modes { DIJSKTRA, EUCLIDEAN, CLUSTER };
     public Modes current_mode = Modes.DIJSKTRA;
 
     void Start()
     {
-        map_size = new Vector3(148, 0, 60);
-        tile_size = new Vector3(map_size.x / tile_size_density / tile_size_density, 0, map_size.z / tile_size_density);
+        map_size = new Vector3(80, 0, 80);
+        tile_size = new Vector3(map_size.x / tile_size_density, 0, map_size.z / tile_size_density);
         radius = tile_size.x / 2;
 
         // generate the tiles
@@ -53,10 +53,9 @@ public class TileGraph : MonoBehaviour
         //FindEndNode(room);
 
     }
-
+    int counter = 0;    // count the number of node reached
     void Update()
     {
-        int counter = 0;
         if(tile_base_mode)
         {
             foreach(TileBaseNode node in tile_base_node_list)
@@ -83,17 +82,10 @@ public class TileGraph : MonoBehaviour
             start_node.GetComponent<Renderer>().material.color = Color.red;
             end_node.GetComponent<Renderer>().material.color = Color.red;
 
-            // if the penguin is on the pathfinding, continue its movement.
-            if(tile_path_list.Count > counter && end_node == tile_path_list[tile_path_list.Count - 1])
-            {
-                target_tile_node.transform.position = end_node.transform.position;
-                if(Vector3.Angle(penguin_script.transform.forward, (tile_path_list[counter].transform.position - penguin_script.transform.position)) > 50)
-                {
-                    
-                }
-            }
+            CalculateTileGraphPath();
         }
     }
+
 
     void CreateTile()
     {
@@ -139,15 +131,15 @@ public class TileGraph : MonoBehaviour
 
     private void FindEndNode(int room)
     {
-        while(room == another_room)
+        while(room == target_closet)
         {
-            another_room = UnityEngine.Random.Range(0, 3);
+            target_closet = UnityEngine.Random.Range(0, 3);
         }
-        if(another_room == 0)
+        if(target_closet == 0)
         {
             target_tile_node = room1_tile_nodes[UnityEngine.Random.Range(0, room2_tile_nodes.Count)];
         }
-        else if(another_room == 1)
+        else if(target_closet == 1)
         {
             target_tile_node = room2_tile_nodes[UnityEngine.Random.Range(0, room2_tile_nodes.Count)];
         } else
@@ -155,5 +147,43 @@ public class TileGraph : MonoBehaviour
             target_tile_node = room3_tile_nodes[UnityEngine.Random.Range(0, room3_tile_nodes.Count)];
         }
     }
+    private void CalculateTileGraphPath()
+    {
+        // clear the current list to re-calculate the path.
+        tile_open_list.Clear();
+        tile_closed_list.Clear();
+        tile_path_list.Clear();
 
+        counter = 0;    // set the counter to zero
+        start_node = tile_base_node_list[0];
+        start_node.SetCostSoFar(0);
+
+        //foreach(TileBaseNode node in tile_base_node_list)
+        //{
+        //    if(Cost(penguin_script.transform, node.transform) < Cost(penguin_script.transform, start_node.transform))
+        //    {
+        //        start_node = node;
+        //    }
+        //}
+        closet = target_closet;
+
+        calculateDijkstraTileMode();
+    }
+
+    void calculateDijkstraTileMode()
+    {
+        tile_open_list.Add(start_node); // add the starting node to open node list.
+        float heuristic_temp = Cost(start_node.transform, end_node.transform);
+        start_node.SetHeuristic(heuristic_temp);
+        float total_estimated_value_temp = start_node.CostSoFar() + start_node.HeuristicValue();
+        start_node.SetTotalEstimatedValue(total_estimated_value_temp);
+
+    }
+
+    float Cost(Transform node,Transform neighbours)
+    {
+        float distance = (node.position - neighbours.position).magnitude;
+        return distance;
+    }
 }
+
