@@ -79,4 +79,7 @@ public class TileGraph : MonoBehaviour
             node.ResetPathfindingValue();
         }
     }
+    void FindStartNode() {
+        // find the starting according to my penguin position
+    }
 }

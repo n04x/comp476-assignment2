@@ -24,7 +24,7 @@ public class TileBaseNode : MonoBehaviour
         GetComponent<Renderer>().enabled = true;
     }
 
-    public void NoidInvisible()
+    public void NodeInvisible()
     {
         GetComponent<Renderer>().enabled = false;
     }
