@@ -32,6 +32,7 @@ These variables are used for regular grid tile graph method, notice that they al
 * public int Compare(Node node_a, Node node_b)
     * `int result = node_a.total_estimated_value.CompareTo(node_b.heuristic_value);` To compare the estimated cost from one node to another, again based on slides information of A* algorithm. CompareTo() method is a C# method.
     * return either the `result` or `node_a.heuristic_value.CompareTo(node_b.heuristic_value)` as integer value.    
+* There is also various getter and setter for our float values `cost_so_far, heuristic_value, total_estimated_value`, I did not add them in documentation because I find that getter and setter are self-explanatory.    
 
 ### Pathfinding.cs
 This scripts will handle pathfinding calculation and pathing connection as well for both regular grid tile graph and point of visibility graph. `public AIBehaviour penguin_script` is needed to trace the path for the penguin game object. `Vector3 map_size` to hold the size of our game map, it is set in Start(). It also has `public enum Modes { DIJSKTRA, EUCLIDEAN, CLUSTER }` to determine the current pathfinding mode, the current mode: `public Modes current_mode = Modes.DIJSKTRA`. it also has a boolean `public bool rgtg_mode = true` to determine if we use regular grid tile graph or point of visibility.     
