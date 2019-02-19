@@ -52,6 +52,8 @@ public class Pathfinding : MonoBehaviour
 
     int closet;
     int target_closet;
+    int counter = 0;    // count the number of node reached
+
 
 
     void Start()
@@ -63,6 +65,7 @@ public class Pathfinding : MonoBehaviour
 
         // generate the tiles
         BuildGraph();
+
         closet = UnityEngine.Random.Range(0, 3);
         if(closet == 0)
         {
@@ -84,23 +87,23 @@ public class Pathfinding : MonoBehaviour
 
         ClearTile();
         ClearPov();
-        // FindStartNode();
-        // FindEndNode(closet);
+        FindStartNode();
+        FindEndNode(closet);
 
         rgtg_start_node.SetCostSoFar(0);
 
     }
-    int counter = 0;    // count the number of node reached
     void Update()
     {
         if(rgtg_mode)
         {
+            // color nodes tiles.
             foreach(Node node in rgtg_node_list)
             {
                 node.TurnNodeVisible();
                 //node.GetComponent<Renderer>().material.color = Color.white;
             }
-            // unvisited node.
+            // open node.
             foreach(Node node in rgtg_open_list)
             {
                 node.GetComponent<Renderer>().material.color = Color.yellow;
@@ -121,18 +124,41 @@ public class Pathfinding : MonoBehaviour
 
             // check if the penguin is on the path.
             if(rgtg_path_list.Count > counter && rgtg_target_node == rgtg_path_list[rgtg_path_list.Count - 1]) {
-                if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 35) {
-                    // todo
+                if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 10) {
+                    penguin.Stop();
+                    penguin.RotateTowardTarget(rgtg_path_list[counter].transform.position);
                 } else {
                     if(counter == rgtg_path_list.Count - 1) {
-                        // todo
+                        penguin.Move(rgtg_path_list[counter].transform.position, true);
                     } else {
-                        // todo
+                        penguin.Move(rgtg_path_list[counter].transform.position, false);
                     }
+                }
+                bool node_reached = false;
+                Collider[] collision_array = Physics.OverlapSphere(penguin.transform.position, 0.2f);
+                for(int i = 0; i < collision_array.Length; i++) {
+                    if(collision_array[i].GetComponent(typeof(Node)) == rgtg_path_list[counter]) {
+                        node_reached = true;
+                    }
+                }
+                if(node_reached) {
+                    counter++;
                 }
             }
 
-            CalculateRGTGPath();
+            else {
+                rgtg_mode = false;
+                foreach(Node node in rgtg_path_list) {
+                    node.TurnNodeInvisible();
+                }
+                foreach (Node node in pov_path_list)
+                {
+                    node.TurnNodeVisible();   
+                }
+                CalculatePoVPath();
+            }
+
+            // CalculateRGTGPath();
         } 
         else {
             foreach (Node node in pov_node_list)
@@ -158,7 +184,43 @@ public class Pathfinding : MonoBehaviour
             pov_start_node.GetComponent<Renderer>().material.color = Color.blue;
             pov_target_node.GetComponent<Renderer>().material.color = Color.red;
 
-            CalculatePoVPath();
+            // CalculatePoVPath();
+            if(pov_path_list.Count > counter && pov_target_node == pov_path_list[pov_path_list.Count - 1]) {
+                if(Vector3.Angle(penguin.transform.forward, (pov_path_list[counter].transform.position - penguin.transform.position)) > 10) {
+                    penguin.Stop();
+                    penguin.RotateTowardTarget(pov_path_list[counter].transform.position);
+                } else {
+                    if(counter == pov_path_list.Count - 1) {
+                        penguin.Move(pov_path_list[counter].transform.position, true);
+                    } else {
+                        penguin.Move(pov_path_list[counter].transform.position, false);
+                    }
+                }
+                bool node_reached = false;
+                Collider[] collision_array = Physics.OverlapSphere(penguin.transform.position, 0.2f);
+                for (int i = 0; i < collision_array.Length; i++)
+                {
+                    if(collision_array[i].GetComponent(typeof(Node)) == pov_path_list[counter]) {
+                        node_reached = true;
+                    }
+                }
+
+                if(node_reached) {
+                    counter++;
+                }
+            } else {
+                rgtg_mode = true;
+                foreach (Node node in pov_node_list)
+                {
+                    node.TurnNodeInvisible();
+                }
+                foreach (Node node in rgtg_node_list)
+                {
+                    node.TurnNodeVisible();
+                }
+                CalculateRGTGPath();
+
+            }
         }
     }
 
@@ -183,19 +245,19 @@ public class Pathfinding : MonoBehaviour
             Vector3 pos = node.transform.position;        
             if(pos.x <= -30 && pos.z <= -32)
             {
-                node.GetComponent<Renderer>().material.color = Color.blue;
+                // node.GetComponent<Renderer>().material.color = Color.blue;
                 rgtg_closet1_nodes.Add(node);
             } else if(pos.x <= -16 && pos.z >= 28)
             {
-                node.GetComponent<Renderer>().material.color = Color.cyan;
+                // node.GetComponent<Renderer>().material.color = Color.cyan;
                 rgtg_closet2_nodes.Add(node);
             } else if(pos.x >= 30 && pos.z >= 20)
             {
-                node.GetComponent<Renderer>().material.color = Color.yellow;
+                // node.GetComponent<Renderer>().material.color = Color.yellow;
                 rgtg_closet3_nodes.Add(node);
             } else if(pos.x >= 28 && pos.z <= -28)
             {
-                node.GetComponent<Renderer>().material.color = Color.black;
+                // node.GetComponent<Renderer>().material.color = Color.black;
                 rgtg_closet4_nodes.Add(node);
             }
         }

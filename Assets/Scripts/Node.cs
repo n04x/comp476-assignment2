@@ -45,8 +45,8 @@ public class Node : MonoBehaviour
     
     public void ResetValue()
     {
-        cost_so_far = 0;
-        heuristic_value = 0;
+        cost_so_far = 0.0f;
+        heuristic_value = 0.0f;
         total_estimated_value = 0;
     }
     // Getter and Setter for cost-so-far.
