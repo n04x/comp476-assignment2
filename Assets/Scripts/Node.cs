@@ -15,15 +15,15 @@ public class Node : MonoBehaviour
     // using abbreviation rgtg -> regular grid tile graph
     // ==============================================================================
     public Node[] rgtg_neighbours; // create an array to hold all neighbours. see README for mapping value. 
-    public Node rgtg_previous;
+    public Node previous;
     // ==============================================================================
     // POINT OF VISIBILITY GRAPH
     // using abbreviation pov -> points of visibility
     // ==============================================================================
     public List<Node> pov_neighbours;
-    public Node pov_previous;
+    // public Node pov_previous;
 
-    void Start()
+    void Awake()
     {
         if(rgtg)
         {

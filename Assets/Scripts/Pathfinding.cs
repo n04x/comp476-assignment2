@@ -7,7 +7,7 @@ public class Pathfinding : MonoBehaviour
 {
     public Penguin penguin;
     //public Node tile_based_node_script;
-    Vector3 map_size;
+    public Vector3 map_size;
     //float radius;
     public enum Modes { DIJSKTRA, EUCLIDEAN, CLUSTER };
     public Modes current_mode = Modes.DIJSKTRA;
@@ -17,8 +17,8 @@ public class Pathfinding : MonoBehaviour
     // all rgtg variable and list needed for our pathfinding 
     // look in README for meaning of rgtg
     // ==============================================================================
-    Vector3 rgtg_node_size;
-    float rgtg_density;
+    public Vector3 rgtg_node_size;
+    public float rgtg_density;
     public Node rgtg_start_node;
     public Node rgtg_target_node;
     public List<Node> rgtg_node_list = new List<Node>();
@@ -83,8 +83,11 @@ public class Pathfinding : MonoBehaviour
         }
 
         ClearTile();
-        FindStartNode();
-        //FindEndNode(room);
+        ClearPov();
+        // FindStartNode();
+        // FindEndNode(closet);
+
+        rgtg_start_node.SetCostSoFar(0);
 
     }
     int counter = 0;    // count the number of node reached
@@ -112,17 +115,57 @@ public class Pathfinding : MonoBehaviour
             {
                 node.GetComponent<Renderer>().material.color = Color.green;
             }
-            // starting and ending point.
-            rgtg_start_node.GetComponent<Renderer>().material.color = Color.red;
+            // starting and target point.
+            rgtg_start_node.GetComponent<Renderer>().material.color = Color.blue;
             rgtg_target_node.GetComponent<Renderer>().material.color = Color.red;
 
-            CalculateTileGraphPath();
+            // check if the penguin is on the path.
+            if(rgtg_path_list.Count > counter && rgtg_target_node == rgtg_path_list[rgtg_path_list.Count - 1]) {
+                if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 35) {
+                    // todo
+                } else {
+                    if(counter == rgtg_path_list.Count - 1) {
+                        // todo
+                    } else {
+                        // todo
+                    }
+                }
+            }
+
+            CalculateRGTGPath();
+        } 
+        else {
+            foreach (Node node in pov_node_list)
+            {
+                node.TurnNodeVisible();
+            }
+            // unvisited node.
+            foreach (Node node in pov_open_list)
+            {
+                node.GetComponent<Renderer>().material.color = Color.yellow;
+            }
+            // closed node.
+            foreach (Node node in pov_closed_list)
+            {
+                node.GetComponent<Renderer>().material.color = Color.grey;
+            }
+            // selected path for our penguin.
+            foreach (Node node in pov_path_list)
+            {
+                node.GetComponent<Renderer>().material.color = Color.green;
+            }
+            // starting and target point.
+            pov_start_node.GetComponent<Renderer>().material.color = Color.blue;
+            pov_target_node.GetComponent<Renderer>().material.color = Color.red;
+
+            CalculatePoVPath();
         }
     }
 
 
     void BuildGraph()
     {
+        // Build graph for regular grid tile
         GameObject[] rgtg_node_graph = GameObject.FindGameObjectsWithTag("rgtg_node");
 
         foreach(GameObject go in rgtg_node_graph)
@@ -137,23 +180,48 @@ public class Pathfinding : MonoBehaviour
 
         foreach(Node node in rgtg_node_list)
         {
-            Vector3 pos = node.transform.position;
+            Vector3 pos = node.transform.position;        
             if(pos.x <= -30 && pos.z <= -32)
             {
-                // node.GetComponent<Renderer>().material.color = Color.blue;
+                node.GetComponent<Renderer>().material.color = Color.blue;
                 rgtg_closet1_nodes.Add(node);
             } else if(pos.x <= -16 && pos.z >= 28)
             {
-                // node.GetComponent<Renderer>().material.color = Color.cyan;
+                node.GetComponent<Renderer>().material.color = Color.cyan;
                 rgtg_closet2_nodes.Add(node);
             } else if(pos.x >= 30 && pos.z >= 20)
             {
-                // node.GetComponent<Renderer>().material.color = Color.yellow;
+                node.GetComponent<Renderer>().material.color = Color.yellow;
                 rgtg_closet3_nodes.Add(node);
             } else if(pos.x >= 28 && pos.z <= -28)
             {
-                // node.GetComponent<Renderer>().material.color = Color.black;
+                node.GetComponent<Renderer>().material.color = Color.black;
                 rgtg_closet4_nodes.Add(node);
+            }
+        }
+
+        // Build graph for point of visibility.
+        GameObject[] pov_node_graph = GameObject.FindGameObjectsWithTag("pov_node");
+
+        foreach (Node node in pov_node_list)
+        {
+            Vector3 pos = node.transform.position;        
+            if(pos.x <= -30 && pos.z <= -32)
+            {
+                node.GetComponent<Renderer>().material.color = Color.blue;
+                pov_closet1_node.Add(node);
+            } else if(pos.x <= -16 && pos.z >= 28)
+            {
+                node.GetComponent<Renderer>().material.color = Color.cyan;
+                pov_closet2_node.Add(node);
+            } else if(pos.x >= 30 && pos.z >= 20)
+            {
+                node.GetComponent<Renderer>().material.color = Color.yellow;
+                pov_closet3_node.Add(node);
+            } else if(pos.x >= 28 && pos.z <= -28)
+            {
+                node.GetComponent<Renderer>().material.color = Color.black;
+                pov_closet4_node.Add(node);
             }
         }
     }
@@ -190,16 +258,26 @@ public class Pathfinding : MonoBehaviour
             node.ResetValue();
         }
     }
+    void ClearPov() {
+        pov_open_list.Clear();
+        pov_closed_list.Clear();
+        pov_path_list.Clear();
+
+        foreach(Node node in pov_node_list){
+            node.ResetValue();
+        }
+    }
+
     void FindStartNode() {
         // find the starting according to my penguin position
     }
 
     private void FindEndNode(int room)
     {
-        while(room == target_closet)
-        {
+        do {
             target_closet = UnityEngine.Random.Range(0, 3);
-        }
+        } while(room == target_closet);
+
         if(target_closet == 0)
         {
             rgtg_target_node = rgtg_closet1_nodes[UnityEngine.Random.Range(0, rgtg_closet1_nodes.Count)];
@@ -212,7 +290,7 @@ public class Pathfinding : MonoBehaviour
             rgtg_target_node = rgtg_closet3_nodes[UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count)];
         }
     }
-    private void CalculateTileGraphPath()
+    private void CalculateRGTGPath()
     {
         // clear the current list to re-calculate the path.
         rgtg_open_list.Clear();
@@ -220,31 +298,171 @@ public class Pathfinding : MonoBehaviour
         rgtg_path_list.Clear();
 
         counter = 0;    // set the counter to zero
+
         rgtg_start_node = rgtg_node_list[0];
         rgtg_start_node.SetCostSoFar(0);
 
-        //foreach(TileBaseNode node in tile_base_node_list)
-        //{
-        //    if(Cost(penguin_script.transform, node.transform) < Cost(penguin_script.transform, start_node.transform))
+        // foreach(Node node in rgtg_path_list)
+        // {
+        //    if(Cost(penguin.transform, node.transform) < Cost(penguin.transform, rgtg_start_node.transform))
         //    {
-        //        start_node = node;
+        //        rgtg_start_node = node;
         //    }
-        //}
+        // }
+        closet = target_closet;
+        // FindEndNode(closet);
+        CalculateDijkstraRGTG();
+    }
+
+    void CalculatePoVPath() {
+        pov_open_list.Clear();
+        pov_closed_list.Clear();
+        pov_path_list.Clear();
+
+        counter = 0;    // set the counter to zero.
+        pov_start_node = pov_node_list[0];
+        pov_start_node.SetCostSoFar(0);
+
         closet = target_closet;
 
-        calculateDijkstraTileMode();
+        CalculateDijkstraPoV();
     }
-
-    void calculateDijkstraTileMode()
+    void CalculateDijkstraRGTG()
     {
         rgtg_open_list.Add(rgtg_start_node); // add the starting node to open node list.
-        float heuristic_temp = Cost(rgtg_start_node.transform, rgtg_target_node.transform);
-        rgtg_start_node.SetHeuristicValue(heuristic_temp);
-        float total_estimated_value_temp = rgtg_start_node.CostSoFar() + rgtg_start_node.HeuristicValue();
-        rgtg_start_node.SetTotalEstimatedValue(total_estimated_value_temp);
+
+        while(rgtg_open_list.Count > 0 || rgtg_closed_list.Count != rgtg_node_list.Count) {
+            Node current_node = rgtg_open_list[0];
+            foreach (Node possible_node in rgtg_open_list)
+            {
+                if(possible_node.TotalEstimateValue() < current_node.TotalEstimateValue()) {
+                    current_node = possible_node;
+                }
+            }
+            rgtg_open_list.Remove(current_node);
+            rgtg_closed_list.Add(current_node);
+
+            foreach (Node neighbour in current_node.rgtg_neighbours)
+            {
+                if(neighbour == null) {
+                    continue;
+                }
+                bool inside_open_list = false;
+                bool inside_closed_list = false;
+
+                if(rgtg_closed_list.Contains(neighbour)) {
+                    inside_closed_list = true;
+                } else if(rgtg_open_list.Contains(neighbour)){
+                    inside_open_list = true;
+                }
+
+                float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
+
+                if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.SetTotalEstimatedValue(new_estimated_value);
+                    neighbour.previous = current_node;
+                    rgtg_closed_list.Remove(neighbour);
+                    rgtg_open_list.Add(neighbour);
+                } else if(inside_open_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.SetTotalEstimatedValue(new_estimated_value);
+                    neighbour.previous = current_node;
+                } else if(!inside_open_list && !inside_closed_list) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.SetTotalEstimatedValue(new_estimated_value);
+                    neighbour.previous = current_node;
+                    rgtg_open_list.Add(neighbour);
+                }
+
+            }
+        }
+
+        rgtg_path_list.Add(rgtg_target_node);
+        while (true)
+        {
+            if(rgtg_path_list[rgtg_path_list.Count - 1].previous == rgtg_start_node) {
+                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
+                rgtg_path_list.Reverse();
+                return;
+            } else {
+                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
+            }
+        }
+        // float heuristic_temp = Cost(rgtg_start_node.transform, rgtg_target_node.transform);
+        // rgtg_start_node.SetHeuristicValue(heuristic_temp);
+        // float total_estimated_value_temp = rgtg_start_node.CostSoFar() + rgtg_start_node.HeuristicValue();
+        // rgtg_start_node.SetTotalEstimatedValue(total_estimated_value_temp);
 
     }
+    void CalculateDijkstraPoV() {
+        pov_open_list.Add(pov_start_node);  // add the starting node to open node list.
 
+        while(pov_open_list.Count > 0 || pov_closed_list.Count != pov_node_list.Count) {
+            Node current_node = pov_open_list[0];   // hold the current node.
+            foreach (Node possible_node in pov_open_list)
+            {
+                if(possible_node.TotalEstimateValue() < current_node.TotalEstimateValue()) {
+                    current_node = possible_node;
+                }
+            }
+
+            pov_open_list.Remove(current_node);
+            pov_closed_list.Add(current_node);
+
+            foreach (Node neighbour in current_node.pov_neighbours)
+            {
+                if(neighbour == null) {
+                    continue;
+                }
+                bool inside_open_list = false;
+                bool inside_closed_list = false;
+
+                if(pov_closed_list.Contains(neighbour)) {
+                    inside_closed_list = true;
+                } else if(pov_open_list.Contains(neighbour)) {
+                    inside_open_list = true;
+                }
+
+                float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
+
+                if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.SetTotalEstimatedValue(new_estimated_value);
+                    neighbour.previous = current_node;
+                    pov_closed_list.Remove(neighbour);
+                    pov_open_list.Add(neighbour);
+                } else if(inside_open_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.SetTotalEstimatedValue(new_estimated_value);
+                    neighbour.previous = current_node;
+                } else if(!inside_open_list && !inside_closed_list) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
+                    neighbour.previous = current_node;
+                    pov_open_list.Add(neighbour);
+                }
+            }
+        }
+        
+        pov_path_list.Add(pov_target_node);
+        while(true) {
+            if(pov_path_list[pov_path_list.Count - 1].previous == pov_start_node) {
+                Node temp_node = pov_path_list[pov_path_list.Count - 1].previous;
+                pov_path_list.Add(temp_node);
+                pov_path_list.Reverse();
+                return;
+            } else
+            {
+                pov_path_list.Add(pov_path_list[pov_path_list.Count - 1].previous);
+            }
+        }
+    }
     float Cost(Transform node,Transform neighbours)
     {
         float distance = (node.position - neighbours.position).magnitude;
