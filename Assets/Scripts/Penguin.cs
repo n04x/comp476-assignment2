@@ -53,7 +53,8 @@ public class Penguin : MonoBehaviour
 
     public bool Stop() {
         current_velocity = current_velocity - max_acceleration;
-        if(current_velocity == 0) {
+        if(current_velocity <= 0) {
+            current_velocity = 0.0f;
             return true;
         } else {
             Vector3 new_position = transform.position + (current_velocity * Time.deltaTime) * transform.forward.normalized;
@@ -62,7 +63,7 @@ public class Penguin : MonoBehaviour
         }
     }
 
-    public bool RotateTowardTarget(Vector3 target_position) {
+    public bool AlignTowardTarget(Vector3 target_position) {
         Quaternion target_rotation = Quaternion.LookRotation(target_position - transform.position);
 
         transform.rotation = Quaternion.Lerp(transform.rotation, target_rotation, max_rotation_velocity * Time.deltaTime);

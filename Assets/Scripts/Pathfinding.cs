@@ -126,7 +126,7 @@ public class Pathfinding : MonoBehaviour
             if(rgtg_path_list.Count > counter && rgtg_target_node == rgtg_path_list[rgtg_path_list.Count - 1]) {
                 if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 10) {
                     penguin.Stop();
-                    penguin.RotateTowardTarget(rgtg_path_list[counter].transform.position);
+                    penguin.AlignTowardTarget(rgtg_path_list[counter].transform.position);
                 } else {
                     if(counter == rgtg_path_list.Count - 1) {
                         penguin.Move(rgtg_path_list[counter].transform.position, true);
@@ -188,7 +188,7 @@ public class Pathfinding : MonoBehaviour
             if(pov_path_list.Count > counter && pov_target_node == pov_path_list[pov_path_list.Count - 1]) {
                 if(Vector3.Angle(penguin.transform.forward, (pov_path_list[counter].transform.position - penguin.transform.position)) > 10) {
                     penguin.Stop();
-                    penguin.RotateTowardTarget(pov_path_list[counter].transform.position);
+                    penguin.AlignTowardTarget(pov_path_list[counter].transform.position);
                 } else {
                     if(counter == pov_path_list.Count - 1) {
                         penguin.Move(pov_path_list[counter].transform.position, true);
