@@ -6,34 +6,37 @@ using System.Collections.Generic;
 public class Node : MonoBehaviour
 {
     // Pathfinding list in A* (see README.md for information)
-    float cost_so_far;
-    float heuristic_value;
-    float total_estimated_value;
+    public float cost_so_far;
+    public float heuristic_value;
+    public float total_estimated_value;
     public bool rgtg = true;
     // ==============================================================================
     // REGULAR GRID (TILE) GRAPH
     // using abbreviation rgtg -> regular grid tile graph
     // ==============================================================================
-    public Node[] rgtg_neighbours; // create an array to hold all neighbours. see README for mapping value. 
+    public Node[] rgtg_neighbours = new Node[8]; // create an array to hold all neighbours. see README for mapping value. 
     public Node previous;
     // ==============================================================================
     // POINT OF VISIBILITY GRAPH
     // using abbreviation pov -> points of visibility
     // ==============================================================================
-    public List<Node> pov_neighbours;
+    public List<Node> pov_neighbours = new List<Node>();
     // public Node pov_previous;
-
-    void Awake()
+    private void Start()
     {
-        if(rgtg)
-        {
-            rgtg_neighbours = new Node[8];
-        } else
-        {
-            pov_neighbours = new List<Node>();
-        }
-        GetComponent<Renderer>().enabled = false;   // start by disabling it.
+        //GetComponent<Renderer>().enabled = false;
     }
+    //void Awake()
+    //{
+    //    if(rgtg)
+    //    {
+    //        rgtg_neighbours = new Node[8];
+    //    } else
+    //    {
+    //        pov_neighbours = new List<Node>();
+    //    }
+    //    GetComponent<Renderer>().enabled = false;   // start by disabling it.
+    //}
     public void TurnNodeVisible()
     {
         GetComponent<Renderer>().enabled = true;
