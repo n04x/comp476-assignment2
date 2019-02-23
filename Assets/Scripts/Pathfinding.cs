@@ -33,22 +33,22 @@ public class Pathfinding : MonoBehaviour
     public Node rgtg_random_node;
     public List<List<float>> rgtg_cluster_lookup = new List<List<float>>();
     // ==============================================================================
-    // all pov variable and list needed for our pathfinding 
+    // all povg variable and list needed for our pathfinding 
     // look in README for meaning of pov
     // ==============================================================================
-    public Node pov_start_node;
-    public Node pov_target_node;
-    public List<Node> pov_node_list = new List<Node>();
-    public List<Node> pov_path_list = new List<Node>();
-    public List<Node> pov_open_list = new List<Node>();
-    public List<Node> pov_closed_list = new List<Node>();
-    public List<Node> pov_closet1_node = new List<Node>();
-    public List<Node> pov_closet2_node = new List<Node>();
-    public List<Node> pov_closet3_node = new List<Node>();
-    public List<Node> pov_closet4_node = new List<Node>();
+    public Node povg_start_node;
+    public Node povg_target_node;
+    public List<Node> povg_node_list = new List<Node>();
+    public List<Node> povg_path_list = new List<Node>();
+    public List<Node> povg_open_list = new List<Node>();
+    public List<Node> povg_closed_list = new List<Node>();
+    public List<Node> povg_closet1_node = new List<Node>();
+    public List<Node> povg_closet2_node = new List<Node>();
+    public List<Node> povg_closet3_node = new List<Node>();
+    public List<Node> povg_closet4_node = new List<Node>();
     //public Node pov_target_node_indicator;
-    public Node pov_random_node;
-    public List<List<float>> pov_cluster_lookup = new List<List<float>>();
+    public Node povg_random_node;
+    public List<List<float>> povg_cluster_lookup = new List<List<float>>();
 
     int closet;
     int target_closet;
@@ -65,7 +65,7 @@ public class Pathfinding : MonoBehaviour
 
         // generate the tiles
         BuildGraph();
-
+        Debug.Log("rgtg node counter: " + rgtg_node_list.Count);
         closet = UnityEngine.Random.Range(0, 3);
         if(closet == 0)
         {
@@ -151,7 +151,7 @@ public class Pathfinding : MonoBehaviour
                 foreach(Node node in rgtg_path_list) {
                     node.TurnNodeInvisible();
                 }
-                foreach (Node node in pov_path_list)
+                foreach (Node node in povg_path_list)
                 {
                     node.TurnNodeVisible();   
                 }
@@ -161,46 +161,46 @@ public class Pathfinding : MonoBehaviour
             // CalculateRGTGPath();
         } 
         else {
-            foreach (Node node in pov_node_list)
+            foreach (Node node in povg_node_list)
             {
                 node.TurnNodeVisible();
             }
             // unvisited node.
-            foreach (Node node in pov_open_list)
+            foreach (Node node in povg_open_list)
             {
                 node.GetComponent<Renderer>().material.color = Color.yellow;
             }
             // closed node.
-            foreach (Node node in pov_closed_list)
+            foreach (Node node in povg_closed_list)
             {
                 node.GetComponent<Renderer>().material.color = Color.grey;
             }
             // selected path for our penguin.
-            foreach (Node node in pov_path_list)
+            foreach (Node node in povg_path_list)
             {
                 node.GetComponent<Renderer>().material.color = Color.green;
             }
             // starting and target point.
-            pov_start_node.GetComponent<Renderer>().material.color = Color.blue;
-            pov_target_node.GetComponent<Renderer>().material.color = Color.red;
+            povg_start_node.GetComponent<Renderer>().material.color = Color.blue;
+            povg_target_node.GetComponent<Renderer>().material.color = Color.red;
 
             // CalculatePoVPath();
-            if(pov_path_list.Count > counter && pov_target_node == pov_path_list[pov_path_list.Count - 1]) {
-                if(Vector3.Angle(penguin.transform.forward, (pov_path_list[counter].transform.position - penguin.transform.position)) > 10) {
+            if(povg_path_list.Count > counter && povg_target_node == povg_path_list[povg_path_list.Count - 1]) {
+                if(Vector3.Angle(penguin.transform.forward, (povg_path_list[counter].transform.position - penguin.transform.position)) > 10) {
                     penguin.Stop();
-                    penguin.AlignTowardTarget(pov_path_list[counter].transform.position);
+                    penguin.AlignTowardTarget(povg_path_list[counter].transform.position);
                 } else {
-                    if(counter == pov_path_list.Count - 1) {
-                        penguin.Move(pov_path_list[counter].transform.position, true);
+                    if(counter == povg_path_list.Count - 1) {
+                        penguin.Move(povg_path_list[counter].transform.position, true);
                     } else {
-                        penguin.Move(pov_path_list[counter].transform.position, false);
+                        penguin.Move(povg_path_list[counter].transform.position, false);
                     }
                 }
                 bool node_reached = false;
                 Collider[] collision_array = Physics.OverlapSphere(penguin.transform.position, 0.2f);
                 for (int i = 0; i < collision_array.Length; i++)
                 {
-                    if(collision_array[i].GetComponent(typeof(Node)) == pov_path_list[counter]) {
+                    if(collision_array[i].GetComponent(typeof(Node)) == povg_path_list[counter]) {
                         node_reached = true;
                     }
                 }
@@ -210,7 +210,7 @@ public class Pathfinding : MonoBehaviour
                 }
             } else {
                 rgtg_mode = true;
-                foreach (Node node in pov_node_list)
+                foreach (Node node in povg_node_list)
                 {
                     node.TurnNodeInvisible();
                 }
@@ -265,25 +265,25 @@ public class Pathfinding : MonoBehaviour
         // Build graph for point of visibility.
         GameObject[] pov_node_graph = GameObject.FindGameObjectsWithTag("pov_node");
 
-        foreach (Node node in pov_node_list)
+        foreach (Node node in povg_node_list)
         {
             Vector3 pos = node.transform.position;        
             if(pos.x <= -30 && pos.z <= -32)
             {
                 node.GetComponent<Renderer>().material.color = Color.blue;
-                pov_closet1_node.Add(node);
+                povg_closet1_node.Add(node);
             } else if(pos.x <= -16 && pos.z >= 28)
             {
                 node.GetComponent<Renderer>().material.color = Color.cyan;
-                pov_closet2_node.Add(node);
+                povg_closet2_node.Add(node);
             } else if(pos.x >= 30 && pos.z >= 20)
             {
                 node.GetComponent<Renderer>().material.color = Color.yellow;
-                pov_closet3_node.Add(node);
+                povg_closet3_node.Add(node);
             } else if(pos.x >= 28 && pos.z <= -28)
             {
                 node.GetComponent<Renderer>().material.color = Color.black;
-                pov_closet4_node.Add(node);
+                povg_closet4_node.Add(node);
             }
         }
     }
@@ -321,11 +321,11 @@ public class Pathfinding : MonoBehaviour
         }
     }
     void ClearPov() {
-        pov_open_list.Clear();
-        pov_closed_list.Clear();
-        pov_path_list.Clear();
+        povg_open_list.Clear();
+        povg_closed_list.Clear();
+        povg_path_list.Clear();
 
-        foreach(Node node in pov_node_list){
+        foreach(Node node in povg_node_list){
             node.ResetValue();
         }
     }
@@ -377,13 +377,13 @@ public class Pathfinding : MonoBehaviour
     }
 
     void CalculatePoVPath() {
-        pov_open_list.Clear();
-        pov_closed_list.Clear();
-        pov_path_list.Clear();
+        povg_open_list.Clear();
+        povg_closed_list.Clear();
+        povg_path_list.Clear();
 
         counter = 0;    // set the counter to zero.
-        pov_start_node = pov_node_list[0];
-        pov_start_node.SetCostSoFar(0);
+        povg_start_node = povg_node_list[0];
+        povg_start_node.SetCostSoFar(0);
 
         closet = target_closet;
 
@@ -461,19 +461,19 @@ public class Pathfinding : MonoBehaviour
 
     }
     void CalculateDijkstraPoV() {
-        pov_open_list.Add(pov_start_node);  // add the starting node to open node list.
+        povg_open_list.Add(povg_start_node);  // add the starting node to open node list.
 
-        while(pov_open_list.Count > 0 || pov_closed_list.Count != pov_node_list.Count) {
-            Node current_node = pov_open_list[0];   // hold the current node.
-            foreach (Node possible_node in pov_open_list)
+        while(povg_open_list.Count > 0 || povg_closed_list.Count != povg_node_list.Count) {
+            Node current_node = povg_open_list[0];   // hold the current node.
+            foreach (Node possible_node in povg_open_list)
             {
                 if(possible_node.TotalEstimateValue() < current_node.TotalEstimateValue()) {
                     current_node = possible_node;
                 }
             }
 
-            pov_open_list.Remove(current_node);
-            pov_closed_list.Add(current_node);
+            povg_open_list.Remove(current_node);
+            povg_closed_list.Add(current_node);
 
             foreach (Node neighbour in current_node.pov_neighbours)
             {
@@ -483,9 +483,9 @@ public class Pathfinding : MonoBehaviour
                 bool inside_open_list = false;
                 bool inside_closed_list = false;
 
-                if(pov_closed_list.Contains(neighbour)) {
+                if(povg_closed_list.Contains(neighbour)) {
                     inside_closed_list = true;
-                } else if(pov_open_list.Contains(neighbour)) {
+                } else if(povg_open_list.Contains(neighbour)) {
                     inside_open_list = true;
                 }
 
@@ -496,8 +496,8 @@ public class Pathfinding : MonoBehaviour
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
                     neighbour.previous = current_node;
-                    pov_closed_list.Remove(neighbour);
-                    pov_open_list.Add(neighbour);
+                    povg_closed_list.Remove(neighbour);
+                    povg_open_list.Add(neighbour);
                 } else if(inside_open_list && new_cost_so_far < neighbour.CostSoFar()) {
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
@@ -507,21 +507,21 @@ public class Pathfinding : MonoBehaviour
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.previous = current_node;
-                    pov_open_list.Add(neighbour);
+                    povg_open_list.Add(neighbour);
                 }
             }
         }
         
-        pov_path_list.Add(pov_target_node);
+        povg_path_list.Add(povg_target_node);
         while(true) {
-            if(pov_path_list[pov_path_list.Count - 1].previous == pov_start_node) {
-                Node temp_node = pov_path_list[pov_path_list.Count - 1].previous;
-                pov_path_list.Add(temp_node);
-                pov_path_list.Reverse();
+            if(povg_path_list[povg_path_list.Count - 1].previous == povg_start_node) {
+                Node temp_node = povg_path_list[povg_path_list.Count - 1].previous;
+                povg_path_list.Add(temp_node);
+                povg_path_list.Reverse();
                 return;
             } else
             {
-                pov_path_list.Add(pov_path_list[pov_path_list.Count - 1].previous);
+                povg_path_list.Add(povg_path_list[povg_path_list.Count - 1].previous);
             }
         }
     }
