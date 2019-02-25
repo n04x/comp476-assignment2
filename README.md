@@ -50,11 +50,13 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
     * This function will be called to align the penguin toward its target node to ensure it is moving in the right direction, it will correct its trajectory if the angle between the target and the penguin is over the threshold, if so, it will correct it's alignment and rotates the penguin toward the target.    
 
 ## Screenshot    
-### Closet Ma  
+### Closet Map  
 <img src="Screenshots/closet-map.png" alt="closet-map" width="350"/> <img src="Screenshots/closet-map-with-node.png" alt="regular-tile-map-with-nodes" width="400"/>        
 ### Regular Grid Tile Graph Map
-<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/>         
+<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/>    
 ### Point of Visibility Graph Map
 <img src="Screenshots/povg-layout.png" alt="point-of-visibility-map" width="400"/>    
+### Cluster layout    
+<img src="Screenshots/cluster-layout.png" alt="cluster-layout-map" width="400" />    
 ## Sources 
 The source for 3d penguin: https://free3d.com/3d-model/emperor-penguin-601811.html
