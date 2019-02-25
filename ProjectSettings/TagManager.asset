@@ -6,6 +6,7 @@ TagManager:
   tags:
   - povg_node
   - temp_tag
+  - rgtg_node
   layers:
   - Default
   - TransparentFX

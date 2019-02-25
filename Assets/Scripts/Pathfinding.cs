@@ -170,7 +170,6 @@ public class Pathfinding : MonoBehaviour
             }
 
             else {
-                Debug.Log("inside the else to set rgtg_mode to false...");
                 rgtg_mode = false;
                 foreach(Node node in rgtg_path_list) {
                     node.TurnNodeInvisible();
@@ -184,7 +183,6 @@ public class Pathfinding : MonoBehaviour
 
         } 
         else {
-            Debug.Log("iside the PoV side");
             foreach (Node node in povg_node_list)
             {
                 node.TurnNodeVisible();
@@ -253,7 +251,7 @@ public class Pathfinding : MonoBehaviour
     void BuildGraph()
     {
         // Build graph for regular grid tile
-        GameObject[] rgtg_node_graph = GameObject.FindGameObjectsWithTag("temp_tag");
+        GameObject[] rgtg_node_graph = GameObject.FindGameObjectsWithTag("rgtg_node");
 
         foreach(GameObject go in rgtg_node_graph)
         {
@@ -386,33 +384,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
-    // used for cluster heuristic.
-    //void LookUpTable(int layers)
-    //{
-    //    // regular grid tile graph table
-    //    for (int i = 0; i < layers; i++)
-    //    {
-    //        rgtg_cluster.Add(new List<float>());
-    //        for (int j = 0; j < layers; j++)
-    //        {
-    //            if (i == j)
-    //            {
-    //                rgtg_cluster[i].Add(0);
-    //            }
-    //            else
-    //            {
-    //                int start = LayerMask.NameToLayer("cluster" + i);
-    //                int end = LayerMask.NameToLayer("cluster" + j);
-    //                rgtg_start_node = GetRgtgNodeCluster(start);
-    //                rgtg_target_node = GetRgtgNodeCluster(end);
-    //                ClearRgtg();
-    //                CalculateDijkstraRGTG();
-    //                float weight = RgtgClusterWeight(rgtg_path_list, start, end);
-    //                rgtg_cluster[i].Add(weight * 1000000);
-    //            }
-    //        }
-    //    }
-    //}
+
     // ===========================================================
     // Regular grid tile graph pathfinding script functions.
     // ===========================================================
@@ -532,9 +504,9 @@ public class Pathfinding : MonoBehaviour
         while (true)
         {
             int size = rgtg_path_list.Count - 1;
-            if (rgtg_path_list[rgtg_path_list.Count - 1].previous == rgtg_start_node)
+            if (rgtg_path_list[size].previous == rgtg_start_node)
             {
-                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
+                rgtg_path_list.Add(rgtg_path_list[size].previous);
                 rgtg_path_list.Reverse();
                 return;
             }
