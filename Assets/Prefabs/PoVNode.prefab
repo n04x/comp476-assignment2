@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7808782967146708092}
   m_Layer: 0
   m_Name: PoVNode
-  m_TagString: pov_node
+  m_TagString: povg_node
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a5a7a8fe5c7d24bb9b136a04e5eab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cost_so_far: 0
+  heuristic_value: 0
+  total_estimated_value: 0
   rgtg: 0
   rgtg_neighbours:
   - {fileID: 0}
@@ -114,6 +117,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  rgtg_previous: {fileID: 0}
+  previous: {fileID: 0}
   pov_neighbours: []
-  pov_previous: {fileID: 0}

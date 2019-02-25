@@ -10,11 +10,12 @@ public class Pathfinding : MonoBehaviour
     //public Node tile_based_node_script;
     public Vector3 map_size;
     //float radius;
-    public enum Modes { DIJSKTRA, EUCLIDEAN, CLUSTER };
-    public Modes current_mode = Modes.DIJSKTRA;
+    public enum Algorithms { DIJSKTRA, EUCLIDEAN, CLUSTER };
+    public Algorithms current_algorithm = Algorithms.DIJSKTRA;
     public bool rgtg_mode = true;  // false for pov.
     public Text textui_mode;
     public Text textui_counter;
+    public Text textui_algorithm;
     // ==============================================================================
     // all rgtg variable and list needed for our pathfinding 
     // look in README for meaning of rgtg
@@ -23,6 +24,7 @@ public class Pathfinding : MonoBehaviour
     public float rgtg_density;
     public Node rgtg_start_node;
     public Node rgtg_target_node;
+    public Node rgtg_random_node;
     public List<Node> rgtg_node_list = new List<Node>();
     public List<Node> rgtg_path_list = new List<Node>();
     public List<Node> rgtg_open_list = new List<Node>();
@@ -31,9 +33,7 @@ public class Pathfinding : MonoBehaviour
     public List<Node> rgtg_closet2_nodes = new List<Node>();
     public List<Node> rgtg_closet3_nodes = new List<Node>();
     public List<Node> rgtg_closet4_nodes = new List<Node>();
-    public Node rgtg_target_node_indicator;
-    public Node rgtg_random_node;
-    public List<List<float>> rgtg_cluster_lookup = new List<List<float>>();
+    public List<List<float>> rgtg_cluster = new List<List<float>>();
     // ==============================================================================
     // all povg variable and list needed for our pathfinding 
     // look in README for meaning of pov
@@ -48,7 +48,6 @@ public class Pathfinding : MonoBehaviour
     public List<Node> povg_closet2_node = new List<Node>();
     public List<Node> povg_closet3_node = new List<Node>();
     public List<Node> povg_closet4_node = new List<Node>();
-    public Node pov_target_node_indicator;
     public Node povg_random_node;
     public List<List<float>> povg_cluster_lookup = new List<List<float>>();
 
@@ -88,22 +87,41 @@ public class Pathfinding : MonoBehaviour
             penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
         }
 
+        //LookUpTable(6);
         ClearRgtg();
         ClearPov();
         FindStartNode();
-        FindEndNode(closet);
-
+        //if(rgtg_mode)
+        //{
+        //    FindRgtgEndNode(closet);
+        //} else
+        //{
+        //    FindPovEndNode(closet);
+        //}
+        FindTargetNode(closet);
         rgtg_start_node.SetCostSoFar(0);
 
     }
+
     void Update()
     {
+        // update the displayed text in the UI.
+        UpdateTextUI(rgtg_mode);
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            // todo
+        } else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            // todo
+        } else if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+
+        }
+
         if(rgtg_mode)
         {
-            textui_mode.text = "Pathfinding graph: rgtg";
-            textui_counter.text = "Counter: " + counter;
             // color nodes tiles.
-            foreach(Node node in rgtg_node_list)
+            foreach (Node node in rgtg_node_list)
             {
                 node.TurnNodeVisible();
                 //node.GetComponent<Renderer>().material.color = Color.white;
@@ -129,8 +147,7 @@ public class Pathfinding : MonoBehaviour
 
             // check if the penguin is on the path.
             if(rgtg_path_list.Count > counter && rgtg_target_node == rgtg_path_list[rgtg_path_list.Count - 1]) {
-                //rgtg_target_node_indicator.transform.position = rgtg_target_node.transform.position;
-                if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 35) {
+                if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 20) {
                     penguin.Stop();
                     penguin.AlignTowardTarget(rgtg_path_list[counter].transform.position);
                 } else {
@@ -153,6 +170,7 @@ public class Pathfinding : MonoBehaviour
             }
 
             else {
+                Debug.Log("inside the else to set rgtg_mode to false...");
                 rgtg_mode = false;
                 foreach(Node node in rgtg_path_list) {
                     node.TurnNodeInvisible();
@@ -166,6 +184,7 @@ public class Pathfinding : MonoBehaviour
 
         } 
         else {
+            Debug.Log("iside the PoV side");
             foreach (Node node in povg_node_list)
             {
                 node.TurnNodeVisible();
@@ -186,13 +205,11 @@ public class Pathfinding : MonoBehaviour
                 node.GetComponent<Renderer>().material.color = Color.green;
             }
             // starting and target point.
-            //povg_start_node.GetComponent<Renderer>().material.color = Color.blue;
-            //povg_target_node.GetComponent<Renderer>().material.color = Color.red;
+            povg_start_node.GetComponent<Renderer>().material.color = Color.blue;
+            povg_target_node.GetComponent<Renderer>().material.color = Color.red;
 
-            // CalculatePoVPath();
-            if(povg_path_list.Count > counter && povg_target_node == povg_path_list[povg_path_list.Count - 1]) {
-                pov_target_node_indicator.transform.position = povg_target_node.transform.position;
-                if(Vector3.Angle(penguin.transform.forward, (povg_path_list[counter].transform.position - penguin.transform.position)) > 10) {
+            if (povg_path_list.Count > counter && povg_target_node == povg_path_list[povg_path_list.Count - 1]) {
+                if(Vector3.Angle(penguin.transform.forward, (povg_path_list[counter].transform.position - penguin.transform.position)) > 20) {
                     penguin.Stop();
                     penguin.AlignTowardTarget(povg_path_list[counter].transform.position);
                 } else {
@@ -230,7 +247,9 @@ public class Pathfinding : MonoBehaviour
         }
     }
 
-
+    // ===========================================================
+    // General-purpose pathfinding script functions.
+    // ===========================================================
     void BuildGraph()
     {
         // Build graph for regular grid tile
@@ -265,8 +284,11 @@ public class Pathfinding : MonoBehaviour
         }
 
         // Build graph for point of visibility.
-        GameObject[] pov_node_graph = GameObject.FindGameObjectsWithTag("pov_node");
-
+        GameObject[] povg_node_graph = GameObject.FindGameObjectsWithTag("povg_node");
+        foreach (GameObject go in povg_node_graph)
+        {
+            povg_node_list.Add(go.GetComponent<Node>());
+        }
         foreach (Node node in povg_node_list)
         {
             Vector3 pos = node.transform.position;        
@@ -289,7 +311,111 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
+    float Cost(Transform node, Transform neighbours)
+    {
+        float distance = (node.position - neighbours.position).magnitude;
+        return distance;
+    }
+    void UpdateTextUI(bool mode)
+    {
+        if (mode)
+        {
+            textui_mode.text = "Pathfinding graph: RGTG";
+            textui_counter.text = "Counter: " + counter;
+            textui_algorithm.text = "A* algorithm: " + current_algorithm;
+        }
+    }
+    void FindStartNode()
+    {
+        // find the starting according to my penguin position
+        for (int i = 0; i < rgtg_node_list.Count; i++)
+        {
+            if (i == 0)
+            {
+                rgtg_start_node = rgtg_node_list[i];
+            }
+            else
+            {
+                if ((penguin.transform.position - rgtg_node_list[i].transform.position).magnitude < (penguin.transform.position - rgtg_start_node.transform.position).magnitude)
+                {
+                    rgtg_start_node = rgtg_node_list[i];
+                }
+            }
+        }
+    }
+    void FindTargetNode(int room)
+    {
+        do
+        {
+            target_closet = UnityEngine.Random.Range(0, 3);
+        } while (room == target_closet);
 
+        if (rgtg_mode)
+        {
+            if (target_closet == 0)
+            {
+                rgtg_target_node = rgtg_closet1_nodes[UnityEngine.Random.Range(0, rgtg_closet1_nodes.Count)];
+            }
+            else if (target_closet == 1)
+            {
+                rgtg_target_node = rgtg_closet2_nodes[UnityEngine.Random.Range(0, rgtg_closet2_nodes.Count)];
+            }
+            else
+            {
+                rgtg_target_node = rgtg_closet3_nodes[UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count)];
+            }
+        }
+        else
+        {
+            do
+            {
+                target_closet = UnityEngine.Random.Range(0, 3);
+            } while (room == target_closet);
+
+            if (target_closet == 0)
+            {
+                povg_target_node = povg_closet1_node[UnityEngine.Random.Range(0, povg_closet1_node.Count)];
+            }
+            else if (target_closet == 1)
+            {
+                povg_target_node = povg_closet2_node[UnityEngine.Random.Range(0, povg_closet2_node.Count)];
+            }
+            else
+            {
+                povg_target_node = povg_closet3_node[UnityEngine.Random.Range(0, povg_closet3_node.Count)];
+            }
+        }
+    }
+    // used for cluster heuristic.
+    //void LookUpTable(int layers)
+    //{
+    //    // regular grid tile graph table
+    //    for (int i = 0; i < layers; i++)
+    //    {
+    //        rgtg_cluster.Add(new List<float>());
+    //        for (int j = 0; j < layers; j++)
+    //        {
+    //            if (i == j)
+    //            {
+    //                rgtg_cluster[i].Add(0);
+    //            }
+    //            else
+    //            {
+    //                int start = LayerMask.NameToLayer("cluster" + i);
+    //                int end = LayerMask.NameToLayer("cluster" + j);
+    //                rgtg_start_node = GetRgtgNodeCluster(start);
+    //                rgtg_target_node = GetRgtgNodeCluster(end);
+    //                ClearRgtg();
+    //                CalculateDijkstraRGTG();
+    //                float weight = RgtgClusterWeight(rgtg_path_list, start, end);
+    //                rgtg_cluster[i].Add(weight * 1000000);
+    //            }
+    //        }
+    //    }
+    //}
+    // ===========================================================
+    // Regular grid tile graph pathfinding script functions.
+    // ===========================================================
     void CreateNeighbours(Node node)
     {
         node.rgtg_neighbours[0] = rgtg_node_list.Find(n => (n.transform.position - node.transform.position) == (new Vector3(0, 0, rgtg_node_size.z)));
@@ -301,7 +427,6 @@ public class Pathfinding : MonoBehaviour
         node.rgtg_neighbours[6] = rgtg_node_list.Find(n => (n.transform.position - node.transform.position) == (new Vector3(-rgtg_node_size.x, 0, 0)));
         node.rgtg_neighbours[7] = rgtg_node_list.Find(n => (n.transform.position - node.transform.position) == (new Vector3(-rgtg_node_size.x, 0, rgtg_node_size.z)));
     }
-
     void ClearRgtg()
     {
         rgtg_open_list.Clear();
@@ -313,54 +438,7 @@ public class Pathfinding : MonoBehaviour
             node.ResetValue();
         }
     }
-
-    void ClearPov() {
-        povg_open_list.Clear();
-        povg_closed_list.Clear();
-        povg_path_list.Clear();
-
-        foreach(Node node in povg_node_list){
-            node.ResetValue();
-        }
-    }
-
-    void FindStartNode() {
-        // find the starting according to my penguin position
-        Debug.Log("inside FindStartNode()");
-        for(int i = 0; i < rgtg_node_list.Count; i++)
-        {
-            if(i == 0)
-            {
-                rgtg_start_node = rgtg_node_list[i];
-            } else
-            {
-                if((penguin.transform.position - rgtg_node_list[i].transform.position).magnitude < (penguin.transform.position - rgtg_start_node.transform.position).magnitude)
-                {
-                    rgtg_start_node = rgtg_node_list[i];
-                }
-            }
-        }
-    }
-
-    private void FindEndNode(int room)
-    {
-        do {
-            target_closet = UnityEngine.Random.Range(0, 3);
-        } while(room == target_closet);
-
-        if(target_closet == 0)
-        {
-            rgtg_target_node = rgtg_closet1_nodes[UnityEngine.Random.Range(0, rgtg_closet1_nodes.Count)];
-        }
-        else if(target_closet == 1)
-        {
-            rgtg_target_node = rgtg_closet2_nodes[UnityEngine.Random.Range(0, rgtg_closet2_nodes.Count)];
-        } else
-        {
-            rgtg_target_node = rgtg_closet3_nodes[UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count)];
-        }
-    }
-    private void CalculateRGTGPath()
+    void CalculateRGTGPath()
     {
         // clear the current list to re-calculate the path.
         rgtg_open_list.Clear();
@@ -381,33 +459,21 @@ public class Pathfinding : MonoBehaviour
         }
 
         closet = target_closet;
-        FindEndNode(closet);
+        FindTargetNode(closet);
         CalculateDijkstraRGTG();
-    }
-
-    void CalculatePoVPath() {
-        povg_open_list.Clear();
-        povg_closed_list.Clear();
-        povg_path_list.Clear();
-
-        counter = 0;    // set the counter to zero.
-        povg_start_node = povg_node_list[0];
-        povg_start_node.SetCostSoFar(0);
-
-        closet = target_closet;
-
-        CalculateDijkstraPoV();
     }
     void CalculateDijkstraRGTG()
     {
         rgtg_open_list.Add(rgtg_start_node); // add the starting node to open node list.
 
-        while(rgtg_open_list.Count > 0 || rgtg_closed_list.Count != rgtg_node_list.Count) {
+        while (rgtg_open_list.Count > 0 || rgtg_closed_list.Count != rgtg_node_list.Count)
+        {
 
             Node current_node = rgtg_open_list[0];
             foreach (Node possible_node in rgtg_open_list)
             {
-                if(possible_node.TotalEstimateValue() < current_node.TotalEstimateValue()) {
+                if (possible_node.TotalEstimateValue() < current_node.TotalEstimateValue())
+                {
                     current_node = possible_node;
                 }
             }
@@ -416,33 +482,42 @@ public class Pathfinding : MonoBehaviour
 
             foreach (Node neighbour in current_node.rgtg_neighbours)
             {
-                if(neighbour == null) {
+                if (neighbour == null)
+                {
                     continue;
                 }
                 bool inside_open_list = false;
                 bool inside_closed_list = false;
 
-                if(rgtg_closed_list.Contains(neighbour)) {
+                if (rgtg_closed_list.Contains(neighbour))
+                {
                     inside_closed_list = true;
-                } else if(rgtg_open_list.Contains(neighbour)){
+                }
+                else if (rgtg_open_list.Contains(neighbour))
+                {
                     inside_open_list = true;
                 }
 
                 float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
 
-                if(rgtg_closed_list.Contains(neighbour) && new_cost_so_far < neighbour.CostSoFar()) {
+                if (rgtg_closed_list.Contains(neighbour) && new_cost_so_far < neighbour.CostSoFar())
+                {
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
                     neighbour.previous = current_node;
                     rgtg_closed_list.Remove(neighbour);
                     rgtg_open_list.Add(neighbour);
-                } else if(inside_open_list && new_cost_so_far < neighbour.CostSoFar()) {
+                }
+                else if (inside_open_list && new_cost_so_far < neighbour.CostSoFar())
+                {
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
                     neighbour.previous = current_node;
-                } else if(!inside_open_list && !inside_closed_list) {
+                }
+                else if (!inside_open_list && !inside_closed_list)
+                {
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
@@ -457,14 +532,48 @@ public class Pathfinding : MonoBehaviour
         while (true)
         {
             int size = rgtg_path_list.Count - 1;
-            if(rgtg_path_list[size].previous == rgtg_start_node) {
+            if (rgtg_path_list[size].previous == rgtg_start_node)
+            {
                 rgtg_path_list.Add(rgtg_path_list[size].previous);
                 rgtg_path_list.Reverse();
                 return;
-            } else {
+            }
+            else
+            {
                 rgtg_path_list.Add(rgtg_path_list[size].previous);
             }
         }
+    }
+    // ===========================================================
+    // Point of visibility graph pathfinding scrip functions.
+    // ===========================================================
+    void ClearPov() {
+        povg_open_list.Clear();
+        povg_closed_list.Clear();
+        povg_path_list.Clear();
+
+        foreach(Node node in povg_node_list){
+            node.ResetValue();
+        }
+    }
+    void CalculatePoVPath() {
+        povg_open_list.Clear();
+        povg_closed_list.Clear();
+        povg_path_list.Clear();
+
+        counter = 0;    // set the counter to zero.
+        povg_start_node = povg_node_list[0];
+        povg_start_node.SetCostSoFar(0);
+        foreach(Node node in povg_node_list)
+        {
+            if(Cost(penguin.transform, node.transform) < Cost(penguin.transform, povg_start_node.transform))
+            {
+                povg_start_node = node;
+            }
+        }
+        closet = target_closet;
+        FindTargetNode(closet);
+        CalculateDijkstraPoV();
     }
     void CalculateDijkstraPoV() {
         povg_open_list.Add(povg_start_node);  // add the starting node to open node list.
@@ -531,10 +640,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }
-    float Cost(Transform node,Transform neighbours)
-    {
-        float distance = (node.position - neighbours.position).magnitude;
-        return distance;
-    }
+    
+ 
 }
 

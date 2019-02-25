@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - rgtg_node
-  - pov_node
+  - povg_node
   layers:
   - Default
   - TransparentFX
@@ -16,12 +16,12 @@ TagManager:
   - 
   - 
   - Obstacles
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - cluster0
+  - cluster1
+  - cluster2
+  - cluster3
+  - cluster4
+  - cluster5
   - 
   - 
   - 
