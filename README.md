@@ -51,10 +51,10 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 
 ## Screenshot    
 ### Closet Map
-![Closet Map](/closet-map.png)    
+![Closet Map](Screenshots/closet-map.png)    
 ### Regular Grid Tile Graph Map
-![Regular Grid Tile Map](/rgtg-layout.png)    
+![Regular Grid Tile Map](Screenshots/rgtg-layout.png)    
 ### Point of Visibility Graph Map
-![Point of Visibility Map](/povg-layout.png)    
+![Point of Visibility Map](Screenshots/povg-layout.png)    
 ## Sources 
 The source for 3d penguin: https://free3d.com/3d-model/emperor-penguin-601811.html
