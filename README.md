@@ -9,7 +9,7 @@ ID: 27554524
 
 ## Map Layout    
 Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear! The red outline design the room, each room has at least one small room called *closet*. There is two corridor in the middle, one that lead to a dead-end. There is few obstacles in each room, to force the player to move around it, instead of straight line in the room.    
-![Map Layout](/map-layout.png)
+<img src="Screenshots/map-layout.png" alt="map-layout" width="400"/>
     
     
 ## Obstacles    
@@ -50,11 +50,11 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
     * This function will be called to align the penguin toward its target node to ensure it is moving in the right direction, it will correct its trajectory if the angle between the target and the penguin is over the threshold, if so, it will correct it's alignment and rotates the penguin toward the target.    
 
 ## Screenshot    
-### Closet Map
-![Closet Map](/closet-map.png)    
+### Closet Ma  
+<img src="Screenshots/closet-map.png" alt="closet-map" width="350"/> <img src="Screenshots/closet-map-with-node.png" alt="regular-tile-map-with-nodes" width="400"/>        
 ### Regular Grid Tile Graph Map
-![Regular Grid Tile Map](/rgtg-layout.png)    
+<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/>         
 ### Point of Visibility Graph Map
-![Point of Visibility Map](/povg-layout.png)    
+<img src="Screenshots/povg-layout.png" alt="point-of-visibility-map" width="400"/>    
 ## Sources 
 The source for 3d penguin: https://free3d.com/3d-model/emperor-penguin-601811.html
