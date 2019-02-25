@@ -52,9 +52,9 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 ## Screenshot    
 ### Closet Map
 ![Closet Map](Screenshots/closet-map.png =250x250)   
-<img src="Screenshots/closet-map.png" alt="closet-map" width="400"/>    
+<img src="Screenshots/closet-map.png" alt="closet-map" width="200"/> <img src="Sreenshots/closet-map-with-node.png" alt="regular-tile-map-with-nodes" width="200"/>        
 ### Regular Grid Tile Graph Map
-<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/> <img src="Sreenshots/closet-map-with-node.png" alt="regular-tile-map-with-nodes" width="400"/>    
+<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/>     
 ![Regular Grid Tile Map](Screenshots/rgtg-layout.png =250x250)    
 ### Point of Visibility Graph Map
 ![Point of Visibility Map](Screenshots/povg-layout.png =250x250)    
