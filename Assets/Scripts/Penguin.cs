@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Penguin : MonoBehaviour
 {
-    float max_velocity;
-    float max_rotation_velocity;
-    float max_acceleration;
-    float max_rotation_acceleration;
-    float time_to_target;
-    float current_rotation_velocity;
-    float current_velocity;
-    float distance_from_target;
-    float current_acceleration;
+    public float max_velocity;
+    public float max_rotation_velocity;
+    public float max_acceleration;
+    public float max_rotation_acceleration;
+    public float time_to_target;
+    public float current_rotation_velocity;
+    public float current_velocity;
+    public float distance_from_target;
+    public float current_acceleration;
     Vector3 direction_vector = new Vector3 (0, 0, 0);
     Vector3 player_distance;
     // =================================================================

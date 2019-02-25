@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pathfinding : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class Pathfinding : MonoBehaviour
     public enum Modes { DIJSKTRA, EUCLIDEAN, CLUSTER };
     public Modes current_mode = Modes.DIJSKTRA;
     public bool rgtg_mode = true;  // false for pov.
-
+    public Text textui_mode;
+    public Text textui_counter;
     // ==============================================================================
     // all rgtg variable and list needed for our pathfinding 
     // look in README for meaning of rgtg
@@ -72,21 +74,21 @@ public class Pathfinding : MonoBehaviour
         {
             int node_pos = UnityEngine.Random.Range(0, rgtg_closet1_nodes.Count);
             rgtg_random_node = rgtg_closet1_nodes[node_pos];
-            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, rgtg_random_node.transform.position.y, rgtg_random_node.transform.position.z);
+            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
         } else if(closet == 1)
         {
             int node_pos = UnityEngine.Random.Range(0, rgtg_closet2_nodes.Count);
             rgtg_random_node = rgtg_closet2_nodes[node_pos];
-            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, rgtg_random_node.transform.position.y, rgtg_random_node.transform.position.z);
+            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
         }
         else if(closet == 2)
         {
             int node_pos = UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count);
             rgtg_random_node = rgtg_closet3_nodes[node_pos];
-            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, rgtg_random_node.transform.position.y, rgtg_random_node.transform.position.z);
+            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
         }
 
-        ClearTile();
+        ClearRgtg();
         ClearPov();
         FindStartNode();
         FindEndNode(closet);
@@ -98,6 +100,8 @@ public class Pathfinding : MonoBehaviour
     {
         if(rgtg_mode)
         {
+            textui_mode.text = "Pathfinding graph: rgtg";
+            textui_counter.text = "Counter: " + counter;
             // color nodes tiles.
             foreach(Node node in rgtg_node_list)
             {
@@ -112,7 +116,7 @@ public class Pathfinding : MonoBehaviour
             // closed node.
             foreach(Node node in rgtg_closed_list)
             {
-                node.GetComponent<Renderer>().material.color = Color.grey;
+                node.GetComponent<Renderer>().material.color = Color.black;
             }
             // selected path for our penguin.
             foreach(Node node in rgtg_path_list)
@@ -125,7 +129,7 @@ public class Pathfinding : MonoBehaviour
 
             // check if the penguin is on the path.
             if(rgtg_path_list.Count > counter && rgtg_target_node == rgtg_path_list[rgtg_path_list.Count - 1]) {
-                rgtg_target_node_indicator.transform.position = rgtg_target_node.transform.position;
+                //rgtg_target_node_indicator.transform.position = rgtg_target_node.transform.position;
                 if(Vector3.Angle(penguin.transform.forward, (rgtg_path_list[counter].transform.position - penguin.transform.position)) > 35) {
                     penguin.Stop();
                     penguin.AlignTowardTarget(rgtg_path_list[counter].transform.position);
@@ -247,19 +251,15 @@ public class Pathfinding : MonoBehaviour
             Vector3 pos = node.transform.position;        
             if(pos.x <= -30 && pos.z <= -32)
             {
-                // node.GetComponent<Renderer>().material.color = Color.blue;
                 rgtg_closet1_nodes.Add(node);
             } else if(pos.x <= -16 && pos.z >= 28)
             {
-                // node.GetComponent<Renderer>().material.color = Color.cyan;
                 rgtg_closet2_nodes.Add(node);
             } else if(pos.x >= 30 && pos.z >= 20)
             {
-                // node.GetComponent<Renderer>().material.color = Color.yellow;
                 rgtg_closet3_nodes.Add(node);
             } else if(pos.x >= 28 && pos.z <= -28)
             {
-                // node.GetComponent<Renderer>().material.color = Color.black;
                 rgtg_closet4_nodes.Add(node);
             }
         }
@@ -302,7 +302,7 @@ public class Pathfinding : MonoBehaviour
         node.rgtg_neighbours[7] = rgtg_node_list.Find(n => (n.transform.position - node.transform.position) == (new Vector3(-rgtg_node_size.x, 0, rgtg_node_size.z)));
     }
 
-    void ClearTile()
+    void ClearRgtg()
     {
         rgtg_open_list.Clear();
         rgtg_closed_list.Clear();
@@ -313,6 +313,7 @@ public class Pathfinding : MonoBehaviour
             node.ResetValue();
         }
     }
+
     void ClearPov() {
         povg_open_list.Clear();
         povg_closed_list.Clear();
@@ -455,12 +456,13 @@ public class Pathfinding : MonoBehaviour
         rgtg_path_list.Add(rgtg_target_node);
         while (true)
         {
-            if(rgtg_path_list[rgtg_path_list.Count - 1].previous == rgtg_start_node) {
-                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
+            int size = rgtg_path_list.Count - 1;
+            if(rgtg_path_list[size].previous == rgtg_start_node) {
+                rgtg_path_list.Add(rgtg_path_list[size].previous);
                 rgtg_path_list.Reverse();
                 return;
             } else {
-                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
+                rgtg_path_list.Add(rgtg_path_list[size].previous);
             }
         }
     }
