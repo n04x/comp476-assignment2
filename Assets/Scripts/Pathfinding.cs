@@ -253,7 +253,7 @@ public class Pathfinding : MonoBehaviour
     void BuildGraph()
     {
         // Build graph for regular grid tile
-        GameObject[] rgtg_node_graph = GameObject.FindGameObjectsWithTag("rgtg_node");
+        GameObject[] rgtg_node_graph = GameObject.FindGameObjectsWithTag("temp_tag");
 
         foreach(GameObject go in rgtg_node_graph)
         {
@@ -532,9 +532,9 @@ public class Pathfinding : MonoBehaviour
         while (true)
         {
             int size = rgtg_path_list.Count - 1;
-            if (rgtg_path_list[size].previous == rgtg_start_node)
+            if (rgtg_path_list[rgtg_path_list.Count - 1].previous == rgtg_start_node)
             {
-                rgtg_path_list.Add(rgtg_path_list[size].previous);
+                rgtg_path_list.Add(rgtg_path_list[rgtg_path_list.Count - 1].previous);
                 rgtg_path_list.Reverse();
                 return;
             }

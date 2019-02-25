@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - rgtg_node
   - povg_node
+  - temp_tag
   layers:
   - Default
   - TransparentFX

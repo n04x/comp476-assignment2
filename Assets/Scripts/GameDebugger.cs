@@ -21,13 +21,17 @@ public class GameDebugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //DebugGraph(nodes_go);
+        DebugGraph(nodes_go);
         //DebugCloset(nodes_go);
-        ClusterID(nodes_go);
+        //ClusterID(nodes_go);
     }
 
     void DebugGraph(GameObject[] nodes)
     {
+        foreach(GameObject node in nodes)
+        {
+            node.GetComponent<Renderer>().enabled = true;
+        }
         Debug.Log("DebugGraph functions in Debugger called!");
         for(int i = 0; i < nodes.Length; i++)
         {
