@@ -9,7 +9,7 @@ ID: 27554524
 
 ## Map Layout    
 Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear! The red outline design the room, each room has at least one small room called *closet*. There is two corridor in the middle, one that lead to a dead-end. There is few obstacles in each room, to force the player to move around it, instead of straight line in the room.    
-<img src="Screenshots/map-layout.png" alt="drawing" width="400"/>
+<img src="Screenshots/map-layout.png" alt="map-layout" width="400"/>
     
     
 ## Obstacles    
@@ -51,8 +51,10 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 
 ## Screenshot    
 ### Closet Map
-![Closet Map](Screenshots/closet-map.png =250x250)    
+![Closet Map](Screenshots/closet-map.png =250x250)   
+<img src="Screenshots/closet-map.png" alt="closet-map" width="400"/>    
 ### Regular Grid Tile Graph Map
+<img src="Screenshots/rgtg-layout.png" alt="regular-grid-tile-map" width="400"/> <img src="Sreenshots/closet-map-with-node.png" alt="regular-tile-map-with-nodes" width="400"/>    
 ![Regular Grid Tile Map](Screenshots/rgtg-layout.png =250x250)    
 ### Point of Visibility Graph Map
 ![Point of Visibility Map](Screenshots/povg-layout.png =250x250)    
