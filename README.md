@@ -5,7 +5,7 @@ Presented by: Thomas Backs
 ID: 27554524    
 ***
 ## Introduction    
- In our games, there is 1200 regular grid tile graph nodes (*click [here](#regular-grid-tile-graph-map) to see the map*), and 88 point of visibility graph nodes (*click [here](#point-of-visibility-graph-map) to see the map*). In our code we will use the abbreviation for each in order to clearly identify which graph that variable belong to and to facilitate identification as well. for our regular grid tile graph, we use **rgtg** and for our point of visibility graph node we use **povg**.
+ In our games, there is 1200 regular grid tile graph nodes (*click [here](#regular-grid-tile-graph-map) to see the map*), and 88 point of visibility graph nodes (*click [here](#point-of-visibility-graph-map) to see the map*). In our code we will use the abbreviation for each in order to clearly identify which graph that variable belong to and to facilitate identification as well. for our regular grid tile graph, we use **rgtg** and for our point of visibility graph node we use **povg**. To be able to clearly follow the pathing and direction, there is a camera attached to the penguin GameObject that is shown in bottom right corner. On top right, there is some useful information about the current run.    
 
 ## Map Layout    
 Below is a picture of the map layout of the game, with number assigned to each *Room[#]* gameobject in unity. The obstacles has been removed from this picture in order to keep it clear! The red outline design the room, each room has at least one small room called *closet*. There is two corridor in the middle, one that lead to a dead-end. There is few obstacles in each room, to force the player to move around it, instead of straight line in the room.    
