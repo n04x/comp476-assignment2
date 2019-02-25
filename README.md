@@ -57,6 +57,6 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 ### Point of Visibility Graph Map
 <img src="Screenshots/povg-layout.png" alt="point-of-visibility-map" width="400"/>    
 ### Cluster layout    
-<img src="Screenshots/cluster-layout.png" alt="cluster-layout-map" width="400" />    
+<img src="Screenshots/cluster-layout.PNG" alt="cluster-layout-map" width="400" />    
 ## Sources 
 The source for 3d penguin: https://free3d.com/3d-model/emperor-penguin-601811.html
