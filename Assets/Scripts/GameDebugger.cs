@@ -21,7 +21,9 @@ public class GameDebugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DebugCloset(nodes_go);
+        //DebugGraph(nodes_go);
+        //DebugCloset(nodes_go);
+        ClusterID(nodes_go);
     }
 
     void DebugGraph(GameObject[] nodes)
@@ -73,5 +75,28 @@ public class GameDebugger : MonoBehaviour
     void ClusterID(GameObject[] nodes)
     {
         Debug.Log("ClusterID functions in Debugger called!");
+        foreach(GameObject node in nodes)
+        {
+            node.GetComponent<Renderer>().enabled = true;
+            if(node.layer == 9)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(0.95f, 0.0f, 0.0f, 0.35f);
+            } else if(node.layer == 10)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(0.0f, 0.0f, 0.95f, 0.35f);
+            } else if(node.layer == 11)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(0.0f, 0.95f, 0.0f, 0.35f);
+            } else if(node.layer == 12)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.94f, 0.35f);
+            } else if(node.layer == 13)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 0.0f, 0.35f);
+            } else if(node.layer == 14)
+            {
+                node.GetComponent<Renderer>().material.color = new Color(0.0f, 1.0f, 1.0f, 0.35f);
+            }
+        }
     }
 }
