@@ -67,7 +67,7 @@ public class Pathfinding : MonoBehaviour
         // generate the tiles
         BuildGraph();
 
-        closet = UnityEngine.Random.Range(0, 3);
+        closet = UnityEngine.Random.Range(0, 4);
 
         if(closet == 0)
         {
@@ -84,6 +84,11 @@ public class Pathfinding : MonoBehaviour
         {
             int node_pos = UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count);
             rgtg_random_node = rgtg_closet3_nodes[node_pos];
+            penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
+        } else if(closet == 3)
+        {
+            int node_pos = UnityEngine.Random.Range(0, rgtg_closet4_nodes.Count);
+            rgtg_random_node = rgtg_closet4_nodes[node_pos];
             penguin.transform.position = new Vector3(rgtg_random_node.transform.position.x, penguin.transform.position.y, rgtg_random_node.transform.position.z);
         }
 
@@ -343,44 +348,36 @@ public class Pathfinding : MonoBehaviour
     }
     void FindTargetNode(int room)
     {
-        do
-        {
-            target_closet = UnityEngine.Random.Range(0, 3);
+        do {
+            target_closet = UnityEngine.Random.Range(0, 4);
+            Debug.Log("random: " + target_closet);
         } while (room == target_closet);
 
-        if (rgtg_mode)
-        {
-            if (target_closet == 0)
-            {
+        if (rgtg_mode) {
+            if (target_closet == 0) {
                 rgtg_target_node = rgtg_closet1_nodes[UnityEngine.Random.Range(0, rgtg_closet1_nodes.Count)];
             }
-            else if (target_closet == 1)
-            {
+            else if (target_closet == 1) {
                 rgtg_target_node = rgtg_closet2_nodes[UnityEngine.Random.Range(0, rgtg_closet2_nodes.Count)];
             }
-            else
-            {
+            else if(target_closet == 2) {
                 rgtg_target_node = rgtg_closet3_nodes[UnityEngine.Random.Range(0, rgtg_closet3_nodes.Count)];
+            } else if(target_closet == 3) {
+                rgtg_target_node = rgtg_closet4_nodes[UnityEngine.Random.Range(0, rgtg_closet4_nodes.Count)];
             }
         }
-        else
-        {
-            do
-            {
-                target_closet = UnityEngine.Random.Range(0, 3);
-            } while (room == target_closet);
-
-            if (target_closet == 0)
-            {
+        else {
+            if (target_closet == 0) {
                 povg_target_node = povg_closet1_node[UnityEngine.Random.Range(0, povg_closet1_node.Count)];
             }
-            else if (target_closet == 1)
-            {
+            else if (target_closet == 1) {
                 povg_target_node = povg_closet2_node[UnityEngine.Random.Range(0, povg_closet2_node.Count)];
             }
-            else
-            {
+            else if(target_closet == 2) {
                 povg_target_node = povg_closet3_node[UnityEngine.Random.Range(0, povg_closet3_node.Count)];
+            }
+            else if(target_closet == 3) {
+                povg_target_node = povg_closet4_node[UnityEngine.Random.Range(0, povg_closet4_node.Count)];
             }
         }
     }

@@ -25,9 +25,9 @@ public class GameDebugger : MonoBehaviour
     void Update()
     {
         //DebugRGTGraph(nodes_go);
-        DebugPOVGraph(nodes_go_povg);
+        //DebugPOVGraph(nodes_go_povg);
         //DebugCloset(nodes_go);
-        //ClusterID(nodes_go);
+        ClusterID(nodes_go);
     }
 
     void DebugRGTGraph(GameObject[] nodes)
