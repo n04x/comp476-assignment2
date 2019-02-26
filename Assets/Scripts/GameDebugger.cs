@@ -10,12 +10,15 @@ using UnityEngine;
 public class GameDebugger : MonoBehaviour
 {
     GameObject[] nodes_go;
-    List<Node> nodes_list = new List<Node>();
+    GameObject[] nodes_go_povg;
     // Start is called before the first frame update
     void Start()
     {
         nodes_go = GameObject.FindGameObjectsWithTag("rgtg_node");
-        Debug.Log("node list size: " + nodes_go.Length);
+        Debug.Log("rgtg list size: " + nodes_go.Length);
+
+        nodes_go_povg = GameObject.FindGameObjectsWithTag("povg_node");
+        Debug.Log("povg list size: " + nodes_go_povg.Length);
     }
 
     // Update is called once per frame
@@ -75,6 +78,7 @@ public class GameDebugger : MonoBehaviour
             }
         }
     }
+
     void ClusterID(GameObject[] nodes)
     {
         Debug.Log("ClusterID functions in Debugger called!");
