@@ -52,7 +52,7 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 ## Screenshots    
 ### Closet Map
 <img src="Screenshots/closet-map.png" alt="closet-map" width="350" />    
-Each color correspond a different closet, 1 is blue, 2 is red, 3 is green, and 4 is yellow.
+Each color correspond a different closet, `rgtg_closet1_nodes` is blue, `rgtg_closet2_nodes` is red, `rgtg_closet3_nodes` is green, and `rgtg_closet4_nodes` is yellow.    
 ### Regular Grid Tile Graph Map
 <img src="Screenshots/rgtg-layout.png" alt="rgtg-layout" width="400" />    
 
