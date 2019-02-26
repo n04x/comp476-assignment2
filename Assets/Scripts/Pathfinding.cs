@@ -106,6 +106,7 @@ public class Pathfinding : MonoBehaviour
         FindTargetNode(closet);
         rgtg_start_node.SetCostSoFar(0);
 
+        CalculateDijkstraRGTG();
     }
 
     void Update()

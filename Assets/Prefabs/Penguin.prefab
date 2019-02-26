@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5680183642705532518}
   - component: {fileID: 5680183642704565414}
   - component: {fileID: 1887625314366874824}
-  - component: {fileID: 6087208860831802154}
   m_Layer: 0
   m_Name: Penguin
   m_TagString: Untagged
@@ -101,20 +100,6 @@ MonoBehaviour:
   current_velocity: 0
   distance_from_target: 0
   current_acceleration: 0
---- !u!64 &6087208860831802154
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5680183642702301794}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300000, guid: 3e49d2a84fb72094ab7cf0b75990af04, type: 3}
 --- !u!1 &6417158953212700789
 GameObject:
   m_ObjectHideFlags: 0
