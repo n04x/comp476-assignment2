@@ -13,7 +13,7 @@ Below is a picture of the map layout of the game, with number assigned to each *
     
     
 ## Obstacles    
-The obstacles is clearly defined by the color RED in the map layout. There is two type of obstacle, a 4-sided one and a triangular prism one. In all three (3) rooms there is some obstacles.
+The obstacles is clearly defined in the map with the hexadimal code #40F5F3 in the map layout. There is two type of obstacle, a 4-sided obstacle and a triangular prism. In all three (3) rooms there is some obstacles.
 
 ## Scripts file explanation    
 ### Node.cs
