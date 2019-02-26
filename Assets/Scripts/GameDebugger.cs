@@ -39,7 +39,7 @@ public class GameDebugger : MonoBehaviour
             {
                 if(i != j)
                 {
-                    if(nodes[i].transform.position == nodes[j].transform.position)
+                    if(nodes[i].transform.position.x == nodes[j].transform.position.x && nodes[i].transform.position.z == nodes[j].transform.position.z)
                     {
                         nodes[i].GetComponent<Renderer>().material.color = Color.blue;
                         nodes[j].GetComponent<Renderer>().material.color = Color.blue;
@@ -75,7 +75,6 @@ public class GameDebugger : MonoBehaviour
             }
         }
     }
-
     void ClusterID(GameObject[] nodes)
     {
         Debug.Log("ClusterID functions in Debugger called!");
