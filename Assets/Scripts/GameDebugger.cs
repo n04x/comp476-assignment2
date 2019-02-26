@@ -24,18 +24,20 @@ public class GameDebugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DebugGraph(nodes_go);
+        //DebugRGTGraph(nodes_go);
+        DebugPOVGraph(nodes_go_povg);
         //DebugCloset(nodes_go);
         //ClusterID(nodes_go);
     }
 
-    void DebugGraph(GameObject[] nodes)
+    void DebugRGTGraph(GameObject[] nodes)
     {
-        foreach(GameObject node in nodes)
+        Debug.Log("DebugRGTGraph functions in Debugger called!");
+    
+        foreach (GameObject node in nodes)
         {
             node.GetComponent<Renderer>().enabled = true;
         }
-        Debug.Log("DebugGraph functions in Debugger called!");
         for(int i = 0; i < nodes.Length; i++)
         {
             for(int j = 0; j < nodes.Length; j++)
@@ -52,6 +54,15 @@ public class GameDebugger : MonoBehaviour
         }
     }
 
+    void DebugPOVGraph(GameObject[] nodes)
+    {
+        Debug.Log("DebugPOVGraph functions in Debugger called!");
+
+        foreach (GameObject node in nodes)
+        {
+            node.GetComponent<Renderer>().enabled = true;
+        }
+    }
     void DebugCloset(GameObject[] nodes)
     {
         Debug.Log("DebugCloset function in debugger called!");
