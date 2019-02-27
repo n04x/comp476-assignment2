@@ -45,7 +45,7 @@ This scripts will handle our Penguin AI movement behaviour by using the Steering
 * public void Move(Vector3 target_position, bool target_node)    
     * This function will calculate the arrive movement toward the toward using the Steering approach mentioned in our slides. The parameters required for this are the `Vector3 target_position` and the `bool target_node`. If it is set to true, it will slow down toward the goal target, otherwise it will apply the normal velocity movement.  
 * public bool Stop()
-    * This function will force the penguin to stop its action. and reset the `current_velocity` to 0.0f if true. otherwise it will keep moving toward the target. It is called if the angle between its target and the penguin is over the threshold.
+    * This function will force the penguin to stop its action. and reset the `current_velocity` to 0.0f if true. otherwise it will keep moving toward the target. It is called if the angle between its target and the penguin is over the threshold. This will also allow a "smoother" movement and look, less laggy.
 * public bool AlignTowardTarget()
     * This function will be called to align the penguin toward its target node to ensure it is moving in the right direction, it will correct its trajectory if the angle between the target and the penguin is over the threshold, if so, it will correct it's alignment and rotates the penguin toward the target.    
 
