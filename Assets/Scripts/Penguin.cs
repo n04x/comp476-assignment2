@@ -50,7 +50,7 @@ public class Penguin : MonoBehaviour
             transform.position = new_position;
         }
     }
-    // stop the movement in steering mode
+    // stop the movement to allow aligning itself
     public bool Stop() {
         current_velocity = current_velocity - max_acceleration;
         if(current_velocity <= 0) {
