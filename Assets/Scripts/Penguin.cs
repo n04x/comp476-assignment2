@@ -32,6 +32,7 @@ public class Penguin : MonoBehaviour
             current_acceleration = Mathf.Min((goal_velocity - current_velocity) / time_to_target, max_acceleration);
             // Interpolate the oriention of the penguin.
             Quaternion target_rotation = Quaternion.LookRotation(direction_vector);
+            // It use the velocity of the character for the Looking where you're going.
             transform.rotation = Quaternion.Lerp(transform.rotation, target_rotation, current_rotation_velocity * Time.deltaTime);
             // Update the position.
             Vector3 new_position = transform.position + (current_velocity * Time.deltaTime) * transform.forward.normalized;
@@ -44,6 +45,7 @@ public class Penguin : MonoBehaviour
             current_velocity = Mathf.Min(current_velocity + max_acceleration, max_velocity - 10);
             // Interpolate the orientation of the penguin.
             Quaternion target_rotation = Quaternion.LookRotation(direction_vector);
+            // It use the velocity of the character for the Looking where you're going.
             transform.rotation = Quaternion.Lerp(transform.rotation, target_rotation, current_rotation_velocity * Time.deltaTime);
             // Update the position.
             Vector3 new_position = transform.position + (current_velocity * Time.deltaTime) * transform.forward.normalized;
@@ -62,10 +64,10 @@ public class Penguin : MonoBehaviour
             return false;
         }
     }
-    // align with the target.
+    // Align Toward the target.
     public bool AlignTowardTarget(Vector3 target_position) {
         Quaternion target_rotation = Quaternion.LookRotation(target_position - transform.position);
-
+        
         transform.rotation = Quaternion.Lerp(transform.rotation, target_rotation, max_rotation_velocity * Time.deltaTime);
         if(transform.rotation == target_rotation) {
             return true;
