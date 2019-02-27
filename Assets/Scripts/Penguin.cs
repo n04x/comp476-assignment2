@@ -16,7 +16,7 @@ public class Penguin : MonoBehaviour
     Vector3 direction_vector = new Vector3 (0, 0, 0);
     Vector3 player_distance;
     // =================================================================
-    // Steering arrive movement function with Align capacity.
+    // Path following to delegate to steering Arrive.
     // =================================================================
     public void Move(Vector3 target_position, bool target_node) {
         if(target_node) {
@@ -64,7 +64,9 @@ public class Penguin : MonoBehaviour
             return false;
         }
     }
-    // Align Toward the target.
+    // =================================================================
+    // Looking where you're going delegating to steering Align
+    // =================================================================
     public bool AlignTowardTarget(Vector3 target_position) {
         Quaternion target_rotation = Quaternion.LookRotation(target_position - transform.position);
         
