@@ -26,7 +26,7 @@ public class Penguin : MonoBehaviour
             // find the current rotation velocity.
             current_rotation_velocity = Mathf.Min(current_rotation_velocity + max_rotation_acceleration, max_rotation_velocity);
             //Create a goal velocity that is proportional to the distance to the target (interpolated from 0 to max)
-            float goal_velocity = max_velocity * (distance_from_target / 15f);
+            float goal_velocity = max_velocity * (distance_from_target / 15f); // 15 is the r_s.
             current_velocity = Mathf.Min(current_velocity + current_acceleration, max_velocity);
             //Calculate the current acceleration based on the goal velocity and the current velocity
             current_acceleration = Mathf.Min((goal_velocity - current_velocity) / time_to_target, max_acceleration);

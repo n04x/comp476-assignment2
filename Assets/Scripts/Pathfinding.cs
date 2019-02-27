@@ -488,9 +488,28 @@ public class Pathfinding : MonoBehaviour
                 }
 
                 float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
-                float new_heuristic = 3 * Cost(neighbour.transform, rgtg_target_node.transform) + GetRgtgInClusterHeuristic();
-                neighbour.SetHeuristicValue()
-                if(rgtg_closed_list.Contains(neighbour) && new_cost_so_far < neighbour.CostSoFar())
+                // calculate the new heuristic.
+                int current_temp = neighbour.gameObject.layer;
+                int end_temp = neighbour.gameObject.layer;
+                float new_heuristic = 3 * Cost(neighbour.transform, rgtg_target_node.transform) + GetRgtgInClusterHeuristic(current_temp, end_temp);
+                neighbour.SetHeuristicValue(new_heuristic);
+
+                if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    neighbour.SetTotalEstimatedValue(neighbour.CostSoFar() + neighbour.HeuristicValue());
+                    neighbour.previous = current_node;
+                    rgtg_closed_list.Remove(neighbour);
+                    rgtg_open_list.Add(neighbour);
+                } else if(inside_open_list && new_cost_so_far < neighbour.CostSoFar()) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    neighbour.SetTotalEstimatedValue(neighbour.CostSoFar() + neighbour.HeuristicValue());
+                    neighbour.previous = current_node;
+                } else if(!inside_closed_list && !inside_open_list) {
+                    neighbour.SetCostSoFar(new_cost_so_far);
+                    neighbour.SetTotalEstimatedValue(neighbour.CostSoFar() + neighbour.HeuristicValue());
+                    neighbour.previous = current_node;
+                    rgtg_open_list.Add(neighbour);
+                }
             }
         }
     }
@@ -648,7 +667,15 @@ public class Pathfinding : MonoBehaviour
 
         return total;
     }
-    
+    float GetRgtgInClusterHeuristic(int current, int target) {
+        int current_index = current - LayerMask.NameToLayer("cluster0");
+        int target_index = target - LayerMask.NameToLayer("cluster0");
+
+        if(current_index > rgtg_cluster.Count || target_index > rgtg_cluster[current_index].Count) {
+            return 0.0f;
+        }
+        return rgtg_cluster[current_index][target_index];
+    }
     // ===========================================================
     // Point of visibility graph pathfinding scrip functions.
     // ===========================================================
