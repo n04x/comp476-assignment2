@@ -50,7 +50,7 @@ public class Penguin : MonoBehaviour
             transform.position = new_position;
         }
     }
-
+    // stop the movement in steering mode
     public bool Stop() {
         current_velocity = current_velocity - max_acceleration;
         if(current_velocity <= 0) {
@@ -62,7 +62,7 @@ public class Penguin : MonoBehaviour
             return false;
         }
     }
-
+    // align with the target.
     public bool AlignTowardTarget(Vector3 target_position) {
         Quaternion target_rotation = Quaternion.LookRotation(target_position - transform.position);
 
