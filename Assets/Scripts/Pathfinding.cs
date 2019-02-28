@@ -762,7 +762,7 @@ public class Pathfinding : MonoBehaviour
 
                     ClearRgtg();
                     float weight = CalculateRgtgWeight(rgtg_path_list, start, end) * 1000000;
-                    rgtg_cluster[i].Add(temp);
+                    rgtg_cluster[i].Add(weight);
                 }
             }
         }
