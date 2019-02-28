@@ -21,18 +21,14 @@ public class Node : MonoBehaviour
     // using abbreviation pov -> points of visibility
     // ==============================================================================
     public List<Node> povg_neighbours = new List<Node>();
-    // public Node pov_previous;
-    private void Start()
-    {
-        //GetComponent<Renderer>().enabled = false;
-    }
     void Awake()
     { 
         GetComponent<Renderer>().enabled = false;   // start by disabling it.
     }
+
     public void TurnNodeVisible()
     {
-        GetComponent<Renderer>().enabled = true;
+            GetComponent<Renderer>().enabled = true;
     }
     public void TurnNodeInvisible()
     {
@@ -73,15 +69,5 @@ public class Node : MonoBehaviour
     public void SetTotalEstimatedValue(float value)
     {
         total_estimated_value = value;
-    }
-    // Compare needed for regular grid tile graph to check
-    public int Compare(Node node_a, Node node_b)
-    {
-        int result = node_a.total_estimated_value.CompareTo(node_b.heuristic_value);
-        if(result == 0)
-        {
-            return node_a.heuristic_value.CompareTo(node_b.heuristic_value);
-        }
-        return result;
     }
 }

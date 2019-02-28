@@ -13,6 +13,7 @@ public class Pathfinding : MonoBehaviour
     public enum Algorithms { DIJSKTRA, EUCLIDEAN, CLUSTER };
     public Algorithms current_algorithm = Algorithms.EUCLIDEAN;
     public bool rgtg_mode = true;  // false for pov.
+    public bool node_visibility = true; // hide nodes.
     public Text textui_mode;
     public Text textui_counter;
     public Text textui_algorithm;
@@ -55,6 +56,7 @@ public class Pathfinding : MonoBehaviour
     int target_closet;
     int counter = 0;    // count the number of node reached
     int NUMBER_OF_LAYERS = 6;
+    int HEURISTIC_MULTIPLIER = 9;
 
 
 
@@ -126,12 +128,27 @@ public class Pathfinding : MonoBehaviour
         {
             current_algorithm = Algorithms.CLUSTER;
         }
-
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            if(node_visibility)
+            {
+                node_visibility = false;
+            } else
+            {
+                node_visibility = true;
+            }
+        }
         if(rgtg_mode)
         {
             // color nodes tiles.
             foreach (Node node in rgtg_node_list) {
-                node.TurnNodeVisible();
+                if(node_visibility)
+                {
+                    node.TurnNodeVisible();
+                } else
+                {
+                    node.TurnNodeInvisible();
+                }
                 node.GetComponent<Renderer>().material.color = Color.white;
             }
             // open node.
@@ -181,7 +198,13 @@ public class Pathfinding : MonoBehaviour
                 }
                 foreach (Node node in povg_node_list)
                 {
-                    node.TurnNodeVisible();   
+                    if(node_visibility)
+                    {
+                        node.TurnNodeVisible();
+                    } else
+                    {
+                        node.TurnNodeInvisible();
+                    }
                 }
                 CalculatePovgPath();
             }
@@ -190,7 +213,13 @@ public class Pathfinding : MonoBehaviour
         else {
             foreach (Node node in povg_node_list)
             {
-                node.TurnNodeVisible();
+                if(node_visibility)
+                {
+                    node.TurnNodeVisible();
+                } else
+                {
+                    node.TurnNodeInvisible();
+                }
                 node.GetComponent<Renderer>().material.color = Color.magenta;
             }
             // unvisited node.
@@ -243,7 +272,13 @@ public class Pathfinding : MonoBehaviour
                 }
                 foreach (Node node in rgtg_node_list)
                 {
-                    node.TurnNodeVisible();
+                    if(node_visibility)
+                    {
+                        node.TurnNodeVisible();
+                    } else
+                    {
+                        node.TurnNodeInvisible();
+                    }
                 }
                 CalculateRgtgPath();
 
@@ -320,11 +355,19 @@ public class Pathfinding : MonoBehaviour
         if (mode)
         {
             textui_mode.text = "Pathfinding graph: RGTG";
-        } else
+            if(rgtg_target_node != null)
+            {
+                textui_counter.text = "Cost: " + rgtg_target_node.CostSoFar();
+            }
+        }
+        else
         {
             textui_mode.text = "Pathfinding graph: POVG";
+            if(povg_target_node != null)
+            {
+                textui_counter.text = "Cost: " + povg_target_node.CostSoFar();
+            }
         }
-        textui_counter.text = "Counter: " + counter;
         textui_algorithm.text = "A* algorithm: " + current_algorithm;
     }
     void FindStartNode()
@@ -485,7 +528,6 @@ public class Pathfinding : MonoBehaviour
                 }
 
                 float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
-
                 if (rgtg_closed_list.Contains(neighbour) && new_cost_so_far < neighbour.CostSoFar())
                 {
                     neighbour.SetCostSoFar(new_cost_so_far);
@@ -504,6 +546,7 @@ public class Pathfinding : MonoBehaviour
                 }
                 else if (!inside_open_list && !inside_closed_list)
                 {
+
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
@@ -572,7 +615,7 @@ public class Pathfinding : MonoBehaviour
 
                 float new_cost_so_far = current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform);
                 // calculate the new heuristic
-                float heuristic_neighbour = 3 * Cost(current_node.transform, neighbour.transform);
+                float heuristic_neighbour = HEURISTIC_MULTIPLIER * Cost(current_node.transform, neighbour.transform);
                 neighbour.SetHeuristicValue(heuristic_neighbour);
 
                 if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar())
@@ -658,10 +701,11 @@ public class Pathfinding : MonoBehaviour
                 }
 
                 float new_cost_so_far = current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform);
+
                 // calculate the new heuristic.
                 int neighbour_layer_temp = neighbour.gameObject.layer;
                 int target_layer_temp = rgtg_target_node.gameObject.layer;
-                float new_heuristic = 3 * Cost(neighbour.transform, rgtg_target_node.transform) + GetRgtgInClusterHeuristic(neighbour_layer_temp, target_layer_temp);
+                float new_heuristic = HEURISTIC_MULTIPLIER * Cost(neighbour.transform, rgtg_target_node.transform) + GetRgtgInClusterHeuristic(neighbour_layer_temp, target_layer_temp);
                 neighbour.SetHeuristicValue(new_heuristic);
 
                 if (inside_closed_list && new_cost_so_far < neighbour.CostSoFar())
@@ -717,7 +761,7 @@ public class Pathfinding : MonoBehaviour
                     rgtg_target_node = GetRgtgInCluster(end);
 
                     ClearRgtg();
-                    float temp = CalculateRgtgWeight(rgtg_path_list, start, end) * 1000000;
+                    float weight = CalculateRgtgWeight(rgtg_path_list, start, end) * 1000000;
                     rgtg_cluster[i].Add(temp);
                 }
             }
@@ -736,12 +780,12 @@ public class Pathfinding : MonoBehaviour
     }
     float CalculateRgtgWeight(List<Node> path, int start, int end)
     {
-        int root_index = 0;
+        int start_index = 0;
         for(int i = 0; i < path.Count; i++)
         {
             if(path[i].gameObject.layer == start)
             {
-                root_index = i;
+                start_index = i;
             }
         }
 
@@ -754,13 +798,13 @@ public class Pathfinding : MonoBehaviour
             }
         }
         // check if they are neighbours.
-        if(end_index - root_index == 1)
+        if(end_index - start_index == 1)
         {
             return 1;
         }
 
         float total = 0.0f;
-        for(int i = root_index; i < end_index - 1; i++)
+        for(int i = start_index; i < end_index - 1; i++)
         {
             Vector3 current_position = path[i].gameObject.transform.position;
             Vector3 target_position = path[i].gameObject.transform.position;
@@ -867,8 +911,9 @@ public class Pathfinding : MonoBehaviour
                 }
 
                 float new_cost_so_far = (current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform));
+                textui_counter.text = "Counter: " + current_node.CostSoFar();
 
-                if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
+                if (inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
                     neighbour.SetCostSoFar(new_cost_so_far);
                     float new_estimated_value = neighbour.CostSoFar() + neighbour.HeuristicValue();
                     neighbour.SetTotalEstimatedValue(new_estimated_value);
@@ -948,7 +993,7 @@ public class Pathfinding : MonoBehaviour
 
                 float new_cost_so_far = current_node.CostSoFar() + Cost(current_node.transform, neighbour.transform);
                 // calculate the new heuristic.
-                float heuristic_neighbour = 3 * Cost(neighbour.transform, povg_target_node.transform);
+                float heuristic_neighbour = HEURISTIC_MULTIPLIER * Cost(neighbour.transform, povg_target_node.transform);
                 neighbour.SetHeuristicValue(heuristic_neighbour);
 
                 if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar())
@@ -1035,7 +1080,7 @@ public class Pathfinding : MonoBehaviour
                 // calculate the new heuristic.
                 int neighbour_layer_temp = neighbour.gameObject.layer;
                 int target_layer_temp = povg_target_node.gameObject.layer;
-                float new_heuristic = 3 * Cost(neighbour.transform, povg_target_node.transform) + GetRgtgInClusterHeuristic(neighbour_layer_temp, target_layer_temp);
+                float new_heuristic = HEURISTIC_MULTIPLIER * Cost(neighbour.transform, povg_target_node.transform) + GetRgtgInClusterHeuristic(neighbour_layer_temp, target_layer_temp);
                 neighbour.SetHeuristicValue(new_heuristic);
 
                 if(inside_closed_list && new_cost_so_far < neighbour.CostSoFar()) {
