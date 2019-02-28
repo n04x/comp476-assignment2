@@ -6,9 +6,9 @@ using System.Collections.Generic;
 public class Node : MonoBehaviour
 {
     // Pathfinding list in A* (see README.md for information)
-    public float cost_so_far;
-    public float heuristic_value;
-    public float total_estimated_value;
+    float cost_so_far;
+    float heuristic_value;
+    float total_estimated_value;
     public bool rgtg = true;
     // ==============================================================================
     // REGULAR GRID (TILE) GRAPH
