@@ -46,31 +46,31 @@ I also have a **Debugging** game object which is disabled. If you want to use th
 ## Screenshots    
 
 ### Map Layout
-<img src="Screenshots/map-layout.png" alt="map-layout" width="400" />    
+<img src="Screenshots/map-layout.png" alt="map-layout" width="250" />    
 
 ### Closet Map
-<img src="Screenshots/closet-map.png" alt="closet-map" width="350" />    
+<img src="Screenshots/closet-map.png" alt="closet-map" width="250" />    
 
 Each color correspond a different closet, `rgtg_closet1_nodes` is blue, `rgtg_closet2_nodes` is red, `rgtg_closet3_nodes` is green, and `rgtg_closet4_nodes` is yellow.    
 
 ### Regular Grid Tile Graph Map
-<img src="Screenshots/rgtg-layout.png" alt="rgtg-layout" width="400" />    
+<img src="Screenshots/rgtg-layout.png" alt="rgtg-layout" width="250" />    
 
 ### Point of Visibility Graph Map
-<img src="Screenshots/povg-layout.png" alt="povg-layout" width="400" />    
+<img src="Screenshots/povg-layout.png" alt="povg-layout" width="250" />    
 
 ### Cluster grouping by color Map    
-<img src="Screenshots/cluster-layout.png" alt="cluster-layout" width="400" />    
+<img src="Screenshots/cluster-layout.png" alt="cluster-layout" width="250" />    
 `cluster0` is red, `cluster1` is blue, `cluster2` is green, `cluster3` is magenta, `cluster4` is yellow, and `cluster5` is cyan.    
 
 ### Dijkstra Pathing
-<img src="Screenshots/dijkstra-rgtg.png" alt="dijkstra-rgtg" width="400" /> <img src="Screenshots/dijkstra-povg.png" alt="dijkstra-povg" width="400" />    
+<img src="Screenshots/dijkstra-rgtg.png" alt="dijkstra-rgtg" width="250" /> <img src="Screenshots/dijkstra-povg.png" alt="dijkstra-povg" width="250" />    
 
 ### Euclidean Pathing
-<img src="Screenshots/euclidean-rgtg.png" alt="euclidean-rgtg" width="400" /> <img src="Screenshots/euclidean-povg.png" alt="euclidean-povg" width="400" />    
+<img src="Screenshots/euclidean-rgtg.png" alt="euclidean-rgtg" width="250" /> <img src="Screenshots/euclidean-povg.png" alt="euclidean-povg" width="250" />    
  
 ### Cluster Pathing    
-<img src="Screenshots/cluster-rgtg.png" alt="cluster-rgtg" width="400" /> <img src="Screenshots/cluster-povg.png" alt="cluster-povg.png" width="400" />    
+<img src="Screenshots/cluster-rgtg.png" alt="cluster-rgtg" width="250" /> <img src="Screenshots/cluster-povg.png" alt="cluster-povg.png" width="250" />    
 
 ## Sources 
 The course slides are also my reference as well as this website: https://www.redblobgames.com/pathfinding/   
