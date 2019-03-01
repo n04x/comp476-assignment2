@@ -54,7 +54,6 @@ I also have a **Debugging** game object which is disabled. If you want to use th
 Each color correspond a different closet, `rgtg_closet1_nodes` is blue, `rgtg_closet2_nodes` is red, `rgtg_closet3_nodes` is green, and `rgtg_closet4_nodes` is yellow.    
 
 ### Regular Grid Tile Graph Map
-![drawing|400x400](./Screenshots/rgtg-layout.png)
 <img src="Screenshots/rgtg-layout.png" alt="rgtg-layout" width="400" />    
 
 ### Point of Visibility Graph Map
