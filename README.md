@@ -77,3 +77,4 @@ The course slides are also my reference as well as this website: https://www.red
 The source for 3d penguin: https://free3d.com/3d-model/emperor-penguin-601811.html
 The explanation for grid and graph: https://www.redblobgames.com/pathfinding/grids/graphs.html    
 The explanation for A*: https://www.redblobgames.com/pathfinding/a-star/introduction.html    
+Interesting playlist that help me: https://www.youtube.com/playlist?list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW    
